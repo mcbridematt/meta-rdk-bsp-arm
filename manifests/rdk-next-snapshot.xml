@@ -48,7 +48,7 @@
   <project name="rdkcentral/RdkEasyMeshControllerSSP" path="rdkb/components/opensource/ccsp/RdkEasyMeshController/ssp" remote="github" revision="f50eef9b1b593b31226b12ac9942e389efe9e9fc" upstream="main" dest-branch="main"/>
   <project name="rdkcentral/hal-voice-asterisk" path="components/opensource/hal-voice-asterisk" remote="github" revision="857a3eea3d89a5557e7424f726884ecd67e9aa6e" upstream="main" dest-branch="main"/>
   <project name="rdkcentral/hal-wifi-cfg80211" path="components/opensource/hal-wifi-cfg80211" remote="github" revision="06eb5c40f72091cb50f68e4d10436db2096ab671" upstream="master" dest-branch="master"/>
-  <project name="rdkcentral/meta-rdk-bsp-arm" path="meta-rdk-bsp-arm" remote="github" revision="30413e86911a9bbf7823ec9197b1ca223a60d7d4" upstream="develop" dest-branch="develop"/>
+  <project name="mcbridematt/meta-rdk-bsp-arm" path="meta-rdk-bsp-arm" remote="github" revision="30413e86911a9bbf7823ec9197b1ca223a60d7d4" upstream="develop" dest-branch="develop"/>
   <project name="rdkcentral/meta-rdk-wan" path="meta-rdk-wan" remote="github" revision="0cfb58a3970540c62de993d87672aaada262b8ea" upstream="main" dest-branch="main"/>
   <project name="rdkcentral/rdkb-halif-platform" path="rdkb/components/opensource/ccsp/rdkb-halif-platform" remote="github" revision="04d3f5c8b5e234e7443b92f05a6fa4d6c3122d76" upstream="main" dest-branch="main"/>
 </manifest>
