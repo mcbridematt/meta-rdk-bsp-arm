@@ -16,7 +16,7 @@ do_install() {
 	install -m 0644 ${WORKDIR}/InterfaceMap_em.json ${D}/usr/ccsp/EasyMesh/nvram/InterfaceMap.json
 }
 
-FILES_${PN} = "\
+FILES:${PN} = "\
 	/usr/ccsp/EasyMesh/nvram/InterfaceMap.json \
 	${systemd_unitdir}/system/em_agent.service \
 "

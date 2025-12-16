@@ -1,16 +1,16 @@
 require ccsp_common_genericarm.inc
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:${THISDIR}/files:"
 
-DEPENDS_append = " breakpad"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " breakpad"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-CXXFLAGS_append = " \
+CXXFLAGS:append = " \
     -I${STAGING_INCDIR}/breakpad \
     -std=c++11 \
 "
 
-SRC_URI_append = " \
+SRC_URI:append = " \
     file://ccsp_vendor.h \
     file://utopia.service \
     file://ethwan_intf.sh \
@@ -20,9 +20,9 @@ SRC_URI_append = " \
 "
 
 # we need to patch to code for rpi
-SRC_URI_remove = "file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
+SRC_URI:remove = "file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
 
-SRC_URI_append = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch;apply=no"
+SRC_URI:append = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch;apply=no"
 
 # Some systemd unit files invoke through '/bin/sh -c (...)' which causes
 # the true process name not to appear in syslog (e.g journalctl).
@@ -47,10 +47,10 @@ do_genericarm_patches () {
 }
 addtask genericarm_patches after do_unpack before do_configure
 
-do_configure_prepend_aarch64() {
+do_configure:prepend:aarch64() {
 	sed -e '/len/ s/^\/*/\/\//' -i ${S}/source/ccsp/components/common/DataModel/dml/components/DslhObjRecord/dslh_objro_access.c
 }
-do_install_append_class-target () {
+do_install:append:class-target () {
     # Config files and scripts
     install -m 777 ${S}/scripts/cli_start_arm.sh ${D}/usr/ccsp/cli_start.sh
     install -m 777 ${S}/scripts/cosa_start_arm.sh ${D}/usr/ccsp/cosa_start.sh
@@ -194,7 +194,7 @@ SYSTEMD_SERVICE_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'on
 SYSTEMD_SERVICE_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'webconfig.service', '', d)}"
 SYSTEMD_SERVICE_${PN} += "brlan0_check.service"
 
-FILES_${PN}_append = " \
+FILES:${PN}:append = " \
     /usr/ccsp/ccspSysConfigEarly.sh \
     /usr/ccsp/ccspSysConfigLate.sh \
     /usr/ccsp/utopiaInitCheck.sh \
@@ -221,5 +221,5 @@ FILES_${PN}_append = " \
     ${systemd_unitdir}/system/wan-initialized.target \
     ${systemd_unitdir}/system/wan-initialized.path \
 "
-FILES_${PN}_append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ${systemd_unitdir}/system/RdkWanManager.service ${systemd_unitdir}/system/utopia.service ${systemd_unitdir}/system/RdkVlanManager.service ${systemd_unitdir}/system/RdkTelcoVoiceManager.service ', '', d)}"
-FILES_${PN}_append = "${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' ${systemd_unitdir}/system/RdkFwUpgradeManager.service ', '', d)}"
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ${systemd_unitdir}/system/RdkWanManager.service ${systemd_unitdir}/system/utopia.service ${systemd_unitdir}/system/RdkVlanManager.service ${systemd_unitdir}/system/RdkTelcoVoiceManager.service ', '', d)}"
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' ${systemd_unitdir}/system/RdkFwUpgradeManager.service ', '', d)}"
