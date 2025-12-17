@@ -127,5 +127,6 @@ BBMASK .= "|meta-cmf-broadband/recipes-core/util-linux/util-linux_%.bbappend"
 
 # 2025-12-17 breaks scarthgap build, and not required in broadband
 BBMASK .= "|meta-cmf/recipes-extended/cobalt/cobalt_git.bb"
+BBMASK .= "|meta-rdk-broadband/recipes-rdkb/usp-pa/usp-pa.bb"
 
 BBMASK:append:kirkstone = "|meta-rdk-opensync/recipes/python3-jinja2/python3-jinja2_2.11.1.bb"
