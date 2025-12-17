@@ -175,9 +175,11 @@ DISTRO_FEATURES:remove:broadband = " webui_jst"
 
 # Add new EasyMesh
 DISTRO_FEATURES:append:broadband = " EasyMesh"
+DISTRO_FEATURES:remove:scarthgap = " EasyMesh"
 
 # Add IEEE1905 AL
 DISTRO_FEATURES:append:broadband = " with_alsap"
+DISTRO_FEATURES:remove:scarthgap = " with_alsap"
 
 SESSIONMGR_WS_RPC_ENABLE = "1"
 
