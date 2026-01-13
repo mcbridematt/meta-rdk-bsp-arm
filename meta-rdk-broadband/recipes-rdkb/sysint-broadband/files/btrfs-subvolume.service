@@ -3,7 +3,7 @@ Description=btrfs subvolume management
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh /lib/rdk/btrfs/nvram-subvol-init.sh
+ExecStart=/lib/rdk/btrfs/nvram-subvol-init.sh
 SyslogIdentifier=btrfs-subvolume
 
 [Install]

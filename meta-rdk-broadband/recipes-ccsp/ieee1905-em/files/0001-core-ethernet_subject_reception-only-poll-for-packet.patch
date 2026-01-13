@@ -1,0 +1,44 @@
+From 1ad25677e7ebbc7829aed59b2d3a9421c98e3870 Mon Sep 17 00:00:00 2001
+From: Mathew McBride <matt@traverse.com.au>
+Date: Mon, 12 Jan 2026 13:27:10 +1100
+Subject: [PATCH] core: ethernet_subject_reception: only poll for packets when
+ interface up
+
+High CPU usage was observed when running on a system (e.g Ten64)
+where not all available ethernet interfaces were in the 'UP' state.
+
+This is because datalink_rx.next() returned immediately, causing
+an infinite-loop like effect.
+
+Signed-off-by: Mathew McBride <matt@traverse.com.au>
+---
+ ieee1905-core/src/ethernet_subject_reception.rs | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/ieee1905-core/src/ethernet_subject_reception.rs b/ieee1905-core/src/ethernet_subject_reception.rs
+index 335931a..4bac095 100644
+--- a/ieee1905-core/src/ethernet_subject_reception.rs
++++ b/ieee1905-core/src/ethernet_subject_reception.rs
+@@ -30,6 +30,7 @@ use std::collections::hash_map::Entry;
+ use std::collections::HashMap;
+ use std::io::ErrorKind;
+ use std::time::Duration;
++use std::thread::sleep;
+ use tokio::sync::mpsc::Sender;
+ use tokio::task::{yield_now, JoinSet};
+ use tracing::{debug, error, info, info_span, warn, Instrument};
+@@ -151,6 +152,11 @@ impl EthernetReceiver {
+         self.join_set.spawn_blocking(move || {
+             let _span = info_span!(parent: None, "ethernet_receiver_reader", task = next_task_id()).entered();
+ 
++            // If the interface is not yet up, attempting to
++            // poll for packets will return immediately
++            while !interface.is_up() {
++                sleep(Duration::from_millis(500));
++            }
+             info!("Listening for Ethernet frames...");
+             while !notify_tx.is_closed() {
+                 let packet = match datalink_rx.next() {
+-- 
+2.51.2
+
