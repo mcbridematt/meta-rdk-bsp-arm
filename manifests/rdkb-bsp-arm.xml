@@ -6,7 +6,7 @@
     <remote name="openembedded" fetch="https://git.openembedded.org" review=""/>
     <default remote="cmf" revision="rdkb-2025q4-kirkstone" sync-j="2"/>
     <include name="manifests/oe-layers.xml"/>
-    <project name="rdkcentral/meta-rdk-bsp-arm" remote="github" path="meta-rdk-bsp-arm" revision="main"/>
+    <project name="mcbridematt/meta-rdk-bsp-arm" remote="github" path="meta-rdk-bsp-arm" revision="rdkb-2025-q4"/>
     <project name="components/opensource/gdbus-client"/>
     <project name="rdk/components/generic/libSyscallWrapper"/>
     <project name="rdk/components/generic/libunpriv"/>
