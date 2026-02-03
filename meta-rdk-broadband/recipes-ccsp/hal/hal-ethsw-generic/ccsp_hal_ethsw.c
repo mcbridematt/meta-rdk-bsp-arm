@@ -190,9 +190,10 @@ void GWP_RegisterEthWan_Callback(appCallBack *obj)
 
     return;
 }
+#endif
 
 INT
-    GWP_GetEthWanInterfaceName
+GWP_GetEthWanInterfaceName
 (
  unsigned char * Interface,
  ULONG           maxSize
@@ -200,6 +201,8 @@ INT
 {
     FILE *fp = NULL;
     char temp_ifname[20] = {0};
+    size_t psmValueLen;
+    int strncpyResult;
 
     CcspHalEthSwTrace(("%s called\n", __func__));
 
@@ -226,24 +229,32 @@ INT
 
     pclose(fp);
     temp_ifname[strcspn(temp_ifname, "\n")] = 0;
+    psmValueLen = strlen(temp_ifname);
 
-    if (strlen(temp_ifname) == 0)
+    if (psmValueLen == 0)
     {
         CcspHalEthSwTrace(("%s: ERROR: WAN interface empty after psmcli\n",
                             __FUNCTION__));
         return RETURN_ERR;
     }
 
-    if (maxSize < strlen(temp_ifname) + 1)
-    {
+    strncpyResult = snprintf(Interface, maxSize, "%s", temp_ifname);
+    /* Caution: snprintf returns < 0 for copy errors, but
+     * >= maxSize if the dest buffer is too small.
+     */
+    if (strncpyResult < 0) {
+        CcspHalEthSwTrace(("WARNING: Got error when copying into destination buffer (%d)\n",
+                            strncpyResult));
+    }
+
+    if ((ULONG)strncpyResult >= maxSize) {
         CcspHalEthSwTrace(("WARNING: Buffer too small for interface (%s)\n",
                             temp_ifname));
         return RETURN_ERR;
     }
-    snprintf(Interface, maxSize, "%s", temp_ifname);
+
     return RETURN_OK;
 }
-#endif
 
 /* CcspHalEthSwInit :  */
 /**
@@ -1114,7 +1125,7 @@ INT CcspHalExtSw_setEthWanPort(UINT Port)
     return RETURN_OK;
 }
 
-bool rpiNet_isInterfaceLinkUp(const char *ifname)
+bool HalEthSwGeneric_isInterfaceLinkUp(const char *ifname)
 {
     int  skfd;
     struct ifreq intf;
@@ -1143,7 +1154,13 @@ bool rpiNet_isInterfaceLinkUp(const char *ifname)
 INT GWP_GetEthWanLinkStatus()
 {
     INT status = 0;
-    CcspHalEthSwTrace(("%s called\n", __func__));
-    status = rpiNet_isInterfaceLinkUp(ETH_WAN_INTERFACE) ? TRUE : FALSE;
+    char wan_ifname[IFNAMSIZ];
+
+    if (GWP_GetEthWanInterfaceName((unsigned char *)&wan_ifname, IFNAMSIZ) != RETURN_OK) {
+        fprintf(stderr, "%s: Failed to get WAN Interface name\n", __func__);
+        return FALSE;
+    }
+
+    status = HalEthSwGeneric_isInterfaceLinkUp((char *)&wan_ifname) ? TRUE : FALSE;
     return status;
 }
