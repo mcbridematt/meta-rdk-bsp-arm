@@ -12,7 +12,6 @@ CXXFLAGS:append = " \
 
 SRC_URI:append = " \
     file://ccsp_vendor.h \
-    file://ethwan_intf.sh \
     file://onewifi.service \
 "
 
@@ -125,7 +124,6 @@ do_install:append:class-target () {
      install -D -m 0644 ${S}/systemd_units/CcspXdnsSsp.service ${D}${systemd_unitdir}/system/CcspXdnsSsp.service
 
      install -d ${D}${base_libdir}/rdk
-     install -m 755 ${WORKDIR}/ethwan_intf.sh ${D}${base_libdir}/rdk/
 #WanManager - RdkWanManager.service
      DISTRO_WAN_ENABLED="${@bb.utils.contains('DISTRO_FEATURES','rdkb_wan_manager','true','false',d)}"
      if [ $DISTRO_WAN_ENABLED = 'true' ]; then
@@ -196,7 +194,6 @@ FILES:${PN}:append = " \
     /usr/ccsp/utopiaInitCheck.sh \
     /usr/ccsp/ccspPAMCPCheck.sh \
     /usr/ccsp/ProcessResetCheck.sh \
-    ${base_libdir}/rdk/ethwan_intf.sh \
     ${systemd_unitdir}/system/CcspCrSsp.service \
     ${systemd_unitdir}/system/CcspPandMSsp.service \
     ${systemd_unitdir}/system/PsmSsp.service \
