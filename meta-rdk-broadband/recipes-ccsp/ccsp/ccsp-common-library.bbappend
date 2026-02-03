@@ -44,6 +44,9 @@ SRC_URI:append = " file://0006-util_api-fix-compile-error-under-debug-build.patc
                    file://0008-util_api-al_pkcs12-fix-uninitialized-variable-error.patch \
                    file://0009-cosa-assert-AnscCopyString-can-not-be-called-same.patch \
 "
+# FIXME: renumber this after debug submission
+# Call pre-init script for CcspEthAgent (see ccsp-eth-agent.bbappend)
+SRC_URI:append = " file://0006-systemd-CcspEthAgent-bring-up-all-eth.patch"
 
 do_configure:prepend:aarch64() {
 	sed -e '/len/ s/^\/*/\/\//' -i ${S}/source/ccsp/components/common/DataModel/dml/components/DslhObjRecord/dslh_objro_access.c
