@@ -1159,7 +1159,7 @@
   <Record name="dmsb.vlanmanager.1.alias" type="astr">WANOE</Record>
   <Record name="dmsb.vlanmanager.1.name" type="astr">erouter0</Record>
   <Record name="dmsb.vlanmanager.1.lowerlayers" type="astr">Device.X_RDK_Ethernet.Link.1</Record>
-  <Record name="dmsb.vlanmanager.1.baseinterface" type="astr">eth0</Record>
+  <Record name="dmsb.vlanmanager.1.baseinterface" type="astr">eth1</Record>
   <Record name="dmsb.vlanmanager.1.vlanid" type="astr">-1</Record>
   <Record name="dmsb.vlanmanager.1.tpid" type="astr">0</Record>
   <Record name="dmsb.vlanmanager.1.path" type="astr">Device.X_RDK_WanManager.Interface.1.VirtualInterface.1</Record>

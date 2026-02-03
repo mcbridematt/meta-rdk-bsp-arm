@@ -1207,7 +1207,7 @@
   <Record name="dmsb.ethagent.if.6.PortCapability" type="astr">WAN</Record>
   <Record name="dmsb.ethagent.if.6.AddToLanBridge" type="astr" contentType="bool">FALSE</Record>
    <!-- ccsp-vlanmanager EthLink records -->
-  <Record name="dmsb.ethlink.ifcount" type="astr">1</Record>
+  <Record name="dmsb.ethlink.ifcount" type="astr">2</Record>
 
   <Record name="dmsb.ethlink.1.Enable" type="astr">FALSE</Record>
   <Record name="dmsb.ethlink.1.alias" type="astr">WANOE</Record>
