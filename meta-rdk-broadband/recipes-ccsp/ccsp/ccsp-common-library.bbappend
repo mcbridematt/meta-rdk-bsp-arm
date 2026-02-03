@@ -13,6 +13,7 @@ CXXFLAGS:append = " \
 SRC_URI:append = " \
     file://ccsp_vendor.h \
     file://onewifi.service \
+    file://psmssp.service \
 "
 
 # Fix the path of the 'wan_started' monitor so it reads the correct path
@@ -64,7 +65,8 @@ do_install:append:class-target () {
     install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/systemd_units/CcspCrSsp.service ${D}${systemd_unitdir}/system/CcspCrSsp.service
     install -D -m 0644 ${S}/systemd_units/CcspPandMSsp.service ${D}${systemd_unitdir}/system/CcspPandMSsp.service
-    install -D -m 0644 ${S}/systemd_units/PsmSsp.service ${D}${systemd_unitdir}/system/PsmSsp.service
+    #install -D -m 0644 ${S}/systemd_units/PsmSsp.service ${D}${systemd_unitdir}/system/PsmSsp.service
+    install -D -m 0644 ${WORKDIR}/psmssp.service ${D}${systemd_unitdir}/system/PsmSsp.service
     install -D -m 0644 ${S}/systemd_units/rdkbLogMonitor.service ${D}${systemd_unitdir}/system/rdkbLogMonitor.service
     install -D -m 0644 ${S}/systemd_units/CcspTandDSsp.service ${D}${systemd_unitdir}/system/CcspTandDSsp.service
     install -D -m 0644 ${S}/systemd_units/CcspLMLite.service ${D}${systemd_unitdir}/system/CcspLMLite.service
