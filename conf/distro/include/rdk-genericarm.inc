@@ -167,12 +167,6 @@ DISTRO_FEATURES:append:broadband = " partner_default_ext"
 # Remove WebUI (does not work without erouter0)
 DISTRO_FEATURES:remove:broadband = " webui_jst"
 
-# Add new EasyMesh
-DISTRO_FEATURES:append:broadband = " EasyMesh"
-
-# Add IEEE1905 AL
-DISTRO_FEATURES:append:broadband = " with_alsap"
-
 SESSIONMGR_WS_RPC_ENABLE = "1"
 
 #REFPLTB-2784 : easymesh controller arch only supports with wifiagent
