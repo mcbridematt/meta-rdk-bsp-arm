@@ -168,10 +168,10 @@ DISTRO_FEATURES:append:broadband = " partner_default_ext"
 DISTRO_FEATURES:remove:broadband = " webui_jst"
 
 # Add new EasyMesh
-DISTRO_FEATURES:append:broadband = " EasyMesh"
+#DISTRO_FEATURES:append:broadband = " EasyMesh"
 
 # Add IEEE1905 AL
-DISTRO_FEATURES:append:broadband = " with_alsap"
+#DISTRO_FEATURES:append:broadband = " with_alsap"
 
 # Disable eMTA feature
 DISTRO_FEATURES:append:broadband = " no_mta_support"
