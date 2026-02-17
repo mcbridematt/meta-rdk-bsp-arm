@@ -48,6 +48,9 @@ SRC_URI:append = " file://0006-util_api-fix-compile-error-under-debug-build.patc
 # Call pre-init script for CcspEthAgent (see ccsp-eth-agent.bbappend)
 SRC_URI:append = " file://0006-systemd-CcspEthAgent-bring-up-all-eth.patch"
 
+# Remove mkdir in CcspCrSsp unit file (not required, causes error on read-only rootfs)
+SRC_URI:append = " file://0004-CcspCrSsp-remove-mkdir-rdklogs.patch"
+
 do_configure:prepend:aarch64() {
 	sed -e '/len/ s/^\/*/\/\//' -i ${S}/source/ccsp/components/common/DataModel/dml/components/DslhObjRecord/dslh_objro_access.c
 }
