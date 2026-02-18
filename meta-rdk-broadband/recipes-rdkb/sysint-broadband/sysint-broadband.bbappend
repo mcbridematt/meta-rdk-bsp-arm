@@ -28,6 +28,8 @@ do_install:append() {
 
     ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'echo "OneWiFiEnabled=true" >> ${D}${sysconfdir}/device.properties', '', d)}
 
+    ${@bb.utils.contains('DISTRO_FEATURES', 'erouter0_compatibility', 'echo "WAN_IS_EROUTER0=true" >> ${D}${sysconfdir}/device.properties', '', d)}
+
     #Erouter0 info
     sed -i "/f11/c\       mac=\`ifconfig \$WANINTERFACE | grep HWaddr | cut -d \" \" -f7\`" ${D}${base_libdir}/rdk/utils.sh
     sed -i '/Device.X_CISCO_COM_CableModem.MACAddress/{n;s/.*/    elif [ "$BOX_TYPE" = "XF3" ]; then/}' ${D}${base_libdir}/rdk/utils.sh
