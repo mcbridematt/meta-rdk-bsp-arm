@@ -35,7 +35,7 @@ SRC_URI:append = " file://0003-meta-rdk-bsp-arm-only-remove-pre-and-post-start-c
 # Modify CcspEthAgent systemd unit to use systemd notifications,
 # and RdkWanManager wait for CcspEthAgent's notify event
 SRC_URI:append = " file://0004-systemd-ccsp-eth-agent-sd-notify.patch"
-#SRC_URI:append = " file://0005-systemd-rdk-wan-manager-eth-agent.patch"
+SRC_URI:append = " file://0005-systemd-rdk-wan-manager-eth-agent.patch"
 
 # Fix compile errors when debug symbol generation / compiler flags
 # are enabled in the BitBake EnvironmentFile

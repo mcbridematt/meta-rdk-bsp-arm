@@ -13,6 +13,8 @@ RDEPENDS_packagegroup-rdk-ccsp-broadband:remove = "ccsp-adv-security"
 RDEPENDS_packagegroup-rdk-ccsp-broadband:remove = "ccsp-webui-jst"
 RDEPENDS_packagegroup-rdk-ccsp-broadband:remove = "ccsp-webui-php"
 
+RDEPENDS_packagegroup-rdk-ccsp-broadband:remove = "parodus"
+
 RDEPENDS_packagegroup-rdk-ccsp-broadband:remove = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'RDM', '', ' rdm-agent', d)} \
 "
@@ -27,6 +29,8 @@ RDEPENDS_packagegroup-rdk-ccsp-broadband:append = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'usb-modeswitch', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'usb-modeswitch-data', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'modemmanager', ' ', d)} \
+    start-parodus \
+    parodus2ccsp \
     ${@bb.utils.contains('DISTRO_FEATURES', 'CPUPROCANALYZER_BROADBAND', 'cpuprocanalyzer', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_cellular_manager_mm', 'rdk-cellularmanager-mm', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'rdk_ledmanager', 'rdk-ledmanager', ' ', d)} \
