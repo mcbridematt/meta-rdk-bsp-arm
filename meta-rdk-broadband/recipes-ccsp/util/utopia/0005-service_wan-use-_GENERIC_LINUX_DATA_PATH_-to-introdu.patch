@@ -1,4 +1,4 @@
-From a5a1861f4be644b9ca7069df886c75ccc0467229 Mon Sep 17 00:00:00 2001
+From 1750a33b8026b652fb4a1966c8fba91971952924 Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Tue, 13 Jan 2026 11:33:17 +1100
 Subject: [PATCH 05/13] service_wan: use _GENERIC_LINUX_DATA_PATH_ to introduce
@@ -39,5 +39,5 @@ index b9abc63..9fd4102 100644
              #if defined (_XB6_PRODUCT_REQ_) && defined (_COSA_BCM_ARM_)
                  v_secure_system("firewall");
 -- 
-2.51.2
+2.52.0
 

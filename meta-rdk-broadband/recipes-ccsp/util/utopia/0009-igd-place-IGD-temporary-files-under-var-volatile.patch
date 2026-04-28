@@ -1,4 +1,4 @@
-From 88ddc47146d741c24c522c990dfb7d52747fcc15 Mon Sep 17 00:00:00 2001
+From ca77b6dad1271dee6f3c577cf18e64033449407e Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Wed, 7 Aug 2024 15:21:05 +1000
 Subject: [PATCH 09/13] igd: place IGD temporary files under /var/volatile
@@ -36,5 +36,5 @@ index 5f8018b..c51e5d4 100755
  PRIVATE_LAN_IF="brlan0"
  
 -- 
-2.51.2
+2.52.0
 
