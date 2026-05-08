@@ -14,7 +14,6 @@ CFLAGS:append = " \
     -I=${includedir}/utctx \
     -I=${includedir}/utapi \
     -DWEBPA_NOTIFICATIONS_DISABLED \
-    -DTELEMETRY_DISABLED \
 "
 
 LDFLAGS:remove = " \

@@ -1010,7 +1010,7 @@ $MessageBusSource=true
 
 $T2Enable=true
 $T2Version=2.0.1
-$T2ConfigURL=
+$T2ConfigURL=https://xconf.rdkcentral.com/loguploader/getT2Settings
 
 #Defaults for WanManager
 $tr_dhcpv6c_enabled=1

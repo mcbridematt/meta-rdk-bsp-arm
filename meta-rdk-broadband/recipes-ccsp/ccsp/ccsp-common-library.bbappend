@@ -184,6 +184,7 @@ SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgr
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'onewifi.service ', 'ccspwifiagent.service', d)}"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'webconfig.service', '', d)}"
 SYSTEMD_SERVICE:${PN}:append = " brlan0_check.service"
+SYSTEMD_SERVICE_${PN}:append = " CcspTelemetry.service"
 
 FILES:${PN}:append = " \
     /usr/ccsp/ccspSysConfigEarly.sh \
