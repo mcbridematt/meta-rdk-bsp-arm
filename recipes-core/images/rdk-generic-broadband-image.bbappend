@@ -31,6 +31,8 @@ IMAGE_INSTALL:append = " resolvconf-placeholder"
 IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh',' unified-wifi-mesh unified-wifi-mesh-cli socat','',d)}"
 IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'with_alsap',' ieee1905-em ','',d)}"
 
+IMAGE_INSTALL:append = " incus-agent"
+
 require image-exclude-files.inc
 
 remove_unused_file() {
@@ -42,6 +44,8 @@ ROOTFS_POSTPROCESS_COMMAND:append = "remove_unused_file; "
 
 ROOTFS_POSTPROCESS_COMMAND:append = "add_busybox_fixes; "
 
+ROOTFS_POSTPROCESS_COMMAND:append = "add_root_symlink; "
+
 add_busybox_fixes() {
                 if [  -d ${IMAGE_ROOTFS}/bin ]; then
 			cd  ${IMAGE_ROOTFS}/bin
@@ -52,4 +56,10 @@ add_busybox_fixes() {
                 fi
 }
 
+# The Incus agent expects to have a /root
+# folder when executing commands via
+# `incus exec`
+add_root_symlink() {
+		ln -sfr ${IMAGE_ROOTFS}/home/root ${IMAGE_ROOTFS}/root
+}
 # ----------------------------------------------------------------------------
