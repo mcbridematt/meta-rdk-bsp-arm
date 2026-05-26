@@ -1,0 +1,43 @@
+name: Trigger GitLab pipeline
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-slim
+
+    steps:
+      - name: Trigger GitLab pipeline
+        id: pipelinevars
+        run: |
+          curl --request POST \
+          --form token=${{ secrets.GITLAB_PIPELINE_SECRET }} \
+          --form ref=github-mirror-test \
+          --form "inputs[github-reference]=pull/109/head" \
+          -o new_pipeline.json
+          "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
+          NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
+          echo "NEW_PIPELINE_ID=${NEW_PIPELINE_ID}" > $GITHUB_OUTPUT
+
+      - name: Wait for build step to finish
+        run: |
+          PIPELINE_ID=${{ steps.pipelinevars.NEW_PIPELINE_ID }}
+          while true; do
+            curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${PIPELINE_ID}"
+            CURRENT_PIPELINE_STATUS=(cat pipelinestatus.json | jq -r .status)
+            if [ "${CURRENT_PIPELINE_STATUS}" = "running" ]; then
+              # Wait 120 seconds before next query
+              sleep 120
+              continue
+            elif [ "${CURRENT_PIPELINE_STATUS}" = "success" ]; then
+              echo "Pipeline successful"
+              exit 0
+            elif [ "${CURRENT_PIPELINE_STATUS}" = "failed" ]; then
+              echo "ERROR: Pipeline failed"
+              exit 1
+            else
+              echo "ERROR: Unrecognized status ${CURRENT_PIPELINE_STATUS}"
+              exit 1
+            fi
+          done
