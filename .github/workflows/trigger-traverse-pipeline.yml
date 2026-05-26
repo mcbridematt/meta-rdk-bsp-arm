@@ -15,7 +15,7 @@ jobs:
           --form token=${{ secrets.GITLAB_PIPELINE_SECRET }} \
           --form ref=github-mirror-test \
           --form "inputs[github-reference]=pull/109/head" \
-          -o new_pipeline.json
+          -o new_pipeline.json \
           "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
           NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
           echo "NEW_PIPELINE_ID=${NEW_PIPELINE_ID}" > $GITHUB_OUTPUT
