@@ -23,7 +23,7 @@ jobs:
           while true; do
             curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}"
             CURRENT_PIPELINE_STATUS=$(cat pipelinestatus.json | jq -r .status)
-            if [ "${CURRENT_PIPELINE_STATUS}" = "running" ]; then
+            if [ "${CURRENT_PIPELINE_STATUS}" = "running" ] || [ "${CURRENT_PIPELINE_STATUS}" = "pending" ]; then
               # Wait 120 seconds before next query
               sleep 120
               continue
