@@ -49,8 +49,9 @@ jobs:
             job_info=$(cat pipelinejobs.json | jq ".[$array_ref]")
             job_name=$(echo "${job_info}" | jq -r ".name")
             job_id=$(echo "${job_info}" | jq -r ".id")
+            echo "VM Test Job ID: ${job_id}"
             if [ "${job_name}" = "test_image:vm" ]; then
-              curl -o testlog.txt "https://gitlab.traverse.com.au/api/v4/projects/299/jobs/${job_id}/trace" 1>/dev/null 2>&1
+              curl -o testlog.txt "https://gitlab.traverse.com.au/rdk/rdk-traverse-build/-/jobs/${job_id}/raw" 1>/dev/null 2>&1
               cat testlog.txt
               break
             fi
