@@ -18,10 +18,11 @@ jobs:
           -o new_pipeline.json \
           "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
           NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
+          echo "Created pipeline ID: ${NEW_PIPELINE_ID}"
 
           while true; do
             curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}"
-            CURRENT_PIPELINE_STATUS=(cat pipelinestatus.json | jq -r .status)
+            CURRENT_PIPELINE_STATUS=$(cat pipelinestatus.json | jq -r .status)
             if [ "${CURRENT_PIPELINE_STATUS}" = "running" ]; then
               # Wait 120 seconds before next query
               sleep 120
