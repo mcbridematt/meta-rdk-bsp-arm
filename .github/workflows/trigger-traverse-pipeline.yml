@@ -20,6 +20,8 @@ jobs:
           "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
           NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
           echo "Created pipeline ID: ${NEW_PIPELINE_ID}"
+          PIPELINE_WEB_URL=$(cat new_pipeline.json | jq -r ".web_url")
+          echo "GitLab CI URL: ${PIPELINE_WEB_URL}"
 
           while true; do
             curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}" 1>/dev/null 2>&1
@@ -30,12 +32,26 @@ jobs:
               continue
             elif [ "${CURRENT_PIPELINE_STATUS}" = "success" ]; then
               echo "Pipeline successful"
-              exit 0
+              break
             elif [ "${CURRENT_PIPELINE_STATUS}" = "failed" ]; then
               echo "ERROR: Pipeline failed"
               exit 1
             else
               echo "ERROR: Unrecognized status ${CURRENT_PIPELINE_STATUS}"
               exit 1
+            fi
+          done
+          # Get the test VM log
+          curl -o pipelinejobs.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}/jobs" 1>/dev/null 2>&1
+          NUM_PIPELINE_JOBS=$(cat pipelinejobs.json | jq length)
+          for i in $(seq 1 "${NUM_PIPELINE_JOBS}"); do
+            array_ref=$((i-1))
+            job_info=$(cat pipelinejobs.json | jq ".[$array_ref]")
+            job_name=$(echo "${job_info}" | jq -r ".name")
+            job_id=$(echo "${job_info}" | jq -r ".id")
+            if [ "${job_name}" = "test_image:vm" ]; then
+              curl -o testlog.txt "https://gitlab.traverse.com.au/api/v4/projects/299/jobs/${job_id}/trace" 1>/dev/null 2>&1
+              cat testlog.txt
+              break
             fi
           done
