@@ -9,6 +9,7 @@ jobs:
 
     steps:
       - name: Run GitLab pipeline
+        timeout-minutes: 300
         id: pipelinevars
         run: |
           curl --request POST \
