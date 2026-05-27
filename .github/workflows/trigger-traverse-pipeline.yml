@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-slim
 
     steps:
-      - name: Trigger GitLab pipeline
+      - name: Run GitLab pipeline
         id: pipelinevars
         run: |
           curl --request POST \
@@ -18,13 +18,9 @@ jobs:
           -o new_pipeline.json \
           "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
           NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
-          echo "NEW_PIPELINE_ID=${NEW_PIPELINE_ID}" > $GITHUB_OUTPUT
 
-      - name: Wait for build step to finish
-        run: |
-          PIPELINE_ID=${{ steps.pipelinevars.NEW_PIPELINE_ID }}
           while true; do
-            curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${PIPELINE_ID}"
+            curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}"
             CURRENT_PIPELINE_STATUS=(cat pipelinestatus.json | jq -r .status)
             if [ "${CURRENT_PIPELINE_STATUS}" = "running" ]; then
               # Wait 120 seconds before next query
