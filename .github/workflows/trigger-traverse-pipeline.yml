@@ -14,14 +14,14 @@ jobs:
           curl --request POST \
           --form token=${{ secrets.GITLAB_PIPELINE_SECRET }} \
           --form ref=github-mirror-test \
-          --form "inputs[github-reference]=pull/109/head" \
+          --form "inputs[github-reference]=${GITHUB_REF}" \
           -o new_pipeline.json \
           "https://gitlab.traverse.com.au/api/v4/projects/299/trigger/pipeline"
           NEW_PIPELINE_ID=$(cat new_pipeline.json | jq .id)
           echo "Created pipeline ID: ${NEW_PIPELINE_ID}"
 
           while true; do
-            curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}"
+            curl -o pipelinestatus.json "https://gitlab.traverse.com.au/api/v4/projects/299/pipelines/${NEW_PIPELINE_ID}" 1>/dev/null 2>&1
             CURRENT_PIPELINE_STATUS=$(cat pipelinestatus.json | jq -r .status)
             if [ "${CURRENT_PIPELINE_STATUS}" = "running" ] || [ "${CURRENT_PIPELINE_STATUS}" = "pending" ]; then
               # Wait 120 seconds before next query
