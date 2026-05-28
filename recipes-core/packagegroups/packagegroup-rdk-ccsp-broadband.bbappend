@@ -23,6 +23,8 @@ RDEPENDS_packagegroup-rdk-ccsp-broadband:append = "\
     rdk-logger \
     libseshat \
     notify-comp \
+    start-parodus \
+    parodus2ccsp \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'usbmuxd', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'usb-modeswitch', ' ', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_hybrid_support', 'usb-modeswitch-data', ' ', d)} \
