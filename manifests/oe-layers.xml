@@ -3,7 +3,6 @@
     <project name="rdk/components/opensource/oe/bitbake" path="openembedded-core/bitbake" revision="rdk/kirkstone"/>
     <project name="kraj/meta-clang" remote="github" path="meta-clang" revision="kirkstone"/>
     <project name="rdk/components/opensource/oe/meta-gplv2" path="meta-gplv2" revision="kirkstone"/>
-    <project name="rdk/components/opensource/oe/meta-jz-mips" path="meta-jz-mips" revision="master"/>
     <project name="rdk/components/opensource/oe/meta-openembedded" path="meta-openembedded" revision="rdk/kirkstone"/>
     <project name="rdk/components/opensource/oe/meta-virtualization" path="meta-virtualization" revision="rdk/kirkstone"/>
     <project name="rdk/components/opensource/oe/openembedded-core" path="openembedded-core" revision="rdk/kirkstone"/>

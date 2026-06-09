@@ -8,8 +8,6 @@
     <include name="manifests/oe-layers.xml"/>
     <project name="rdkcentral/meta-rdk-bsp-arm" remote="github" path="meta-rdk-bsp-arm" revision="develop"/>
     <project name="components/opensource/gdbus-client"/>
-    <project name="rdk/components/generic/libSyscallWrapper"/>
-    <project name="rdk/components/generic/libunpriv"/>
     <project name="rdk/components/generic/rdk-oe/meta-cmf" path="meta-cmf"/>
     <project name="rdk/components/generic/rdk-oe/meta-cmf-broadband" path="meta-cmf-broadband"/>
     <project name="rdk/components/generic/rdk-oe/meta-cmf-mesh" path="meta-cmf-mesh"/>
@@ -22,9 +20,6 @@
     <project name="rdk/components/generic/syslog_helper"/>
     <project name="rdkb/components/generic/CcspLogAgent"/>
     <project name="rdkb/components/generic/sso"/>
-    <project name="rdkb/components/opensource/ccsp/FirmwareSanity"/>
-    <project name="rdkb/components/opensource/ccsp/PlatformManager"/>
-    <project name="rdkb/devices/rdkbemu/rdkbemu_xb3" path="rdkb/components/opensource/ccsp/xb3"/>
     <project name="rdkcentral/meta-rdk-wan" remote="github" path="meta-rdk-wan" revision="main"/>
     <project name="rdkcentral/rdkb-halif-platform" remote="github" path="rdkb/components/opensource/ccsp/rdkb-halif-platform" revision="main"/>
 </manifest>
