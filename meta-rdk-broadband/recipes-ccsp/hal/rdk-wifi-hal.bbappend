@@ -8,6 +8,8 @@ SRC_URI:append = " \
 
 CFLAGS:append = " \
 	-fcommon \
+	-Wno-error=unused-variable \
+	-Wno-error=return-type \
 "
 
 # Use Raspberry Pi platform file as a base
