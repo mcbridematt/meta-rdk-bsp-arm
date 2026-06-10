@@ -4,6 +4,7 @@ SRC_URI:append = " \
 	file://0001-platform-raspberry-pi-remove-unused-variable-in-plat.patch;patchdir=.. \
 	file://0002-platform-raspberry-pi-use-RDKB-ARM-AP-d-on-meta-rdk-bsp-arm.patch;patchdir=.. \
 	file://0003-platform-raspberry-pi-use-refboard_default_wifi_pass.patch;patchdir=.. \
+	file://0004-REFPLTB-3519-New-rdk-wifi-halif-import-change-is-not.patch;patchdir=.. \
 "
 
 CFLAGS:append = " \
