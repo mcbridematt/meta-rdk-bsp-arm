@@ -1,0 +1,103 @@
+From ed321051cbb0071aa20ea4378086b24829831ca7 Mon Sep 17 00:00:00 2001
+From: kpandu987 <37654815+kpandu987@users.noreply.github.com>
+Date: Sat, 8 Nov 2025 00:01:02 +0530
+Subject: [PATCH] REFPLTB-3519 : New rdk-wifi-halif import change is not
+ building (#432)
+
+Reason for change:  Observed below issues in rpi
+error: ../platform/raspberry-pi/.libs/librdk_wifihal_la-platform_pi.o: multiple definition of 'wifi_rrm_send_beacon_req'
+ .libs/librdk_wifihal_la-wifi_hal_wnm_rrm.o: previous definition here
+ error: ../platform/raspberry-pi/.libs/librdk_wifihal_la-platform_pi.o: multiple definition of 'wifi_wnm_send_bss_tm_req'
+.libs/librdk_wifihal_la-wifi_hal_wnm_rrm.o: previous definition here
+ error: ../platform/raspberry-pi/.libs/librdk_wifihal_la-platform_pi.o: multiple definition of 'handle_wnm_action_frame'
+this definitions are already provided in ./wifi_hal_wnm_rrm.c and this
+file is added in RPI platform
+reference https://github.com/rdkcentral/rdk-wifi-hal/commit/c24ac486aaed208c4deb4df1a040864c0712f487
+Test Procedure: rdk-wifi-hal compilation successful
+Risks: Low
+
+Signed-off-by: keerthana.p <keerthana_pandurangan@comcast.com>
+
+Signed-off-by: Mathew McBride <matt@traverse.com.au>
+[2026-06-10: apply patch to fix compile issue in 2025.Q4 release branch]
+(cherry-picked from commit 65fdab14114eb6300a5210244e7abd795e92b6ec)
+---
+ platform/raspberry-pi/platform_pi.c | 30 -----------------------------
+ src/wifi_hal_wnm_rrm.c              |  6 +++---
+ 2 files changed, 3 insertions(+), 33 deletions(-)
+
+diff --git a/platform/raspberry-pi/platform_pi.c b/platform/raspberry-pi/platform_pi.c
+index 5151ca4..17f607a 100644
+--- a/platform/raspberry-pi/platform_pi.c
++++ b/platform/raspberry-pi/platform_pi.c
+@@ -628,36 +628,6 @@ INT wifi_steering_eventRegister(wifi_steering_eventCB_t event_cb)
+     return RETURN_OK;
+ }
+ 
+-int wifi_rrm_send_beacon_req(struct wifi_interface_info_t *interface, const u8 *addr,
+-    u16 num_of_repetitions, u8 measurement_request_mode, u8 oper_class, u8 channel,
+-    u16 random_interval, u16 measurement_duration, u8 mode, const u8 *bssid,
+-    struct wpa_ssid_value *ssid, u8 *rep_cond, u8 *rep_cond_threshold, u8 *rep_detail,
+-    const u8 *ap_ch_rep, unsigned int ap_ch_rep_len, const u8 *req_elem, unsigned int req_elem_len,
+-    u8 *ch_width, u8 *ch_center_freq0, u8 *ch_center_freq1, u8 last_indication)
+-{
+-    return 0;
+-}
+-
+-/* called by BTM API */
+-int wifi_wnm_send_bss_tm_req(struct wifi_interface_info_t *interface, struct sta_info *sta,
+-    u8 dialog_token, u8 req_mode, int disassoc_timer, u8 valid_int, const u8 *bss_term_dur,
+-    const char *url, const u8 *nei_rep, size_t nei_rep_len, const u8 *mbo_attrs, size_t mbo_len)
+-{
+-    return 0;
+-}
+-
+-int handle_wnm_action_frame(struct wifi_interface_info_t *interface, const mac_address_t sta,
+-    struct ieee80211_mgmt *mgmt, size_t len)
+-{
+-    return 0;
+-}
+-
+-int handle_rrm_action_frame(struct wifi_interface_info_t *interface, const mac_address_t sta,
+-    const struct ieee80211_mgmt *mgmt, size_t len, int ssi_signal)
+-{
+-    return 0;
+-}
+-
+ INT wifi_setApManagementFramePowerControl(INT apIndex, INT dBm)
+ {
+     return 0;
+diff --git a/src/wifi_hal_wnm_rrm.c b/src/wifi_hal_wnm_rrm.c
+index bc71448..3865c49 100644
+--- a/src/wifi_hal_wnm_rrm.c
++++ b/src/wifi_hal_wnm_rrm.c
+@@ -537,7 +537,7 @@ static int handle_rx_wnm_notification_req(wifi_interface_info_t *interface,
+     return WIFI_HAL_UNSUPPORTED;
+ }
+ 
+-#if !defined(PLATFORM_LINUX)
++#if !defined(PLATFORM_LINUX) || defined(_PLATFORM_BANANAPI_R4_) || defined(_PLATFORM_RASPBERRYPI_)
+ int handle_wnm_action_frame(wifi_interface_info_t *interface, const mac_address_t sta, struct ieee80211_mgmt *mgmt, size_t len)
+ {
+     u8 action;
+@@ -760,7 +760,7 @@ static void wifi_set_disassoc_timer(struct hostapd_data *hapd, struct sta_info *
+                 ap_handle_timer, hapd, sta);
+ }
+ 
+-#if !defined(PLATFORM_LINUX)
++#if !defined(PLATFORM_LINUX) || defined(_PLATFORM_BANANAPI_R4_) || defined(_PLATFORM_RASPBERRYPI_)
+ /* Implementation is based on wnm_send_bss_tm_req() from wnm_ap.c */
+ int wifi_wnm_send_bss_tm_req(wifi_interface_info_t *interface, struct sta_info *sta,
+             u8 dialog_token, u8 req_mode, int disassoc_timer, u8 valid_int,
+@@ -1023,7 +1023,7 @@ static int handle_radio_msmt_report(wifi_interface_info_t *interface, const mac_
+     return WIFI_HAL_SUCCESS;
+ }
+ 
+-#if !defined(PLATFORM_LINUX)
++#if !defined(PLATFORM_LINUX) || defined(_PLATFORM_BANANAPI_R4_) || defined (_PLATFORM_RASPBERRYPI_)
+ int handle_rrm_action_frame(wifi_interface_info_t *interface, const mac_address_t sta,
+                     const struct ieee80211_mgmt *mgmt, size_t len, int ssi_signal)
+ {
+-- 
+2.39.5
+

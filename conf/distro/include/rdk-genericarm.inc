@@ -122,9 +122,6 @@ DISTRO_FEATURES:append:broadband = " device_gateway_association"
 # REFPLTB-1546 : WiFi HAL 3.0 support for RPI
 DISTRO_FEATURES:append:broadband = " halVersion3"
 
-# RDKBDEV-866: EasyMesh Controller support
-DISTRO_FEATURES:append:broadband = " easymesh-controller"
-
 # RDKB-44824: CoreNetLib move bb file location
 DISTRO_FEATURES:append:broadband = " core-net-lib"
 
@@ -169,12 +166,6 @@ DISTRO_FEATURES:append:broadband = " partner_default_ext"
 
 # Remove WebUI (does not work without erouter0)
 DISTRO_FEATURES:remove:broadband = " webui_jst"
-
-# Add new EasyMesh
-DISTRO_FEATURES:append:broadband = " EasyMesh"
-
-# Add IEEE1905 AL
-DISTRO_FEATURES:append:broadband = " with_alsap"
 
 SESSIONMGR_WS_RPC_ENABLE = "1"
 
