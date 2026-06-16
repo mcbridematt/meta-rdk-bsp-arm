@@ -75,7 +75,7 @@ IMAGE_FEATURES:remove = "read-only-rootfs"
 ENABLE_UART = "1"
 
 # 2024-11-11: meta-cmf-arm: usppa disabled due to erouter0 dependency
-# DISTRO_FEATURES:append:broadband = " usppa"
+DISTRO_FEATURES:append:broadband = " usppa"
 
 # REFPLTV-1137: DLNA support for xupnp
 DISTRO_FEATURES:append:broadband = " dlna"
@@ -90,10 +90,12 @@ DISTRO_FEATURES:append:broadband = " rdkb_cellular_manager_mm"
 DISTRO_FEATURES:append:broadband = " cellular_mgr_lite"
 DISTRO_FEATURES:append:broadband = " cellular_libqmi_support"
 
+#RNDIS Feature
+#DISTRO_FEATURES_append_broadband = " cellular_hybrid_support"
 DISTRO_FEATURES:append:broadband = " rdkb_power_manager"
 #DISTRO_FEATURES:append:broadband = " rdkb_gpon_manager"
 DISTRO_FEATURES:append:broadband = " rdkb_wan_manager"
-#DISTRO_FEATURES:append:broadband = " rdkb_configurable_wan_interface"
+DISTRO_FEATURES:append:broadband = " rdkb_configurable_wan_interface"
 #DISTRO_FEATURES:append:broadband = " rdkb_voice_manager_dmltr104_v2"
 DISTRO_FEATURES:append:broadband = " rdkb_xdsl_ppp_manager"
 DISTRO_FEATURES:append:broadband = " fwupgrade_manager"
@@ -131,9 +133,6 @@ DISTRO_FEATURES:append:broadband = " dac"
 # REFPLTB-1775: Sky team's fix for erouter0 IP issue
 DISTRO_FEATURES:append:broadband = " RbusBuildFlagEnable"
 
-#MeshAgent support for broadband
-DISTRO_FEATURES:append:broadband = " meshwifi"
-
 #rdk-wifi-libhostap support for broadband
 DISTRO_FEATURES:append:broadband = " HOSTAPD_2_11"
 
@@ -156,7 +155,7 @@ DISTRO_FEATURES:append:broadband = " lld_support"
 
 # RDKB-48800: Install DHCP Manager service file
 # 2025-09: Disable DHCP Manager (RDKBNETWOR-3)
-# DISTRO_FEATURES:append:broadband = " dhcp_manager"
+DISTRO_FEATURES:append:broadband = " dhcp_manager"
 
 # RDKBDEV-694: Adding Partner Default Ext
 DISTRO_FEATURES:append:broadband = " partner_default_ext"
@@ -166,6 +165,12 @@ DISTRO_FEATURES:append:broadband = " partner_default_ext"
 
 # Remove WebUI (does not work without erouter0)
 DISTRO_FEATURES:remove:broadband = " webui_jst"
+
+# Disable eMTA feature
+DISTRO_FEATURES:append:broadband = " no_mta_support"
+
+# Disable RDM
+DISTRO_FEATURES:remove:broadband = " RDM"
 
 SESSIONMGR_WS_RPC_ENABLE = "1"
 

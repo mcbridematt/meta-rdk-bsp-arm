@@ -22,6 +22,9 @@ IMAGE_INSTALL:append =" ${@bb.utils.contains('DISTRO_FEATURES', 'Asterisk', ' ha
 # For Rust environment verification
 IMAGE_INSTALL:append = " rust-hello-world"
 
+#RNDIS SUPPORT
+IMAGE_INSTALL:append = " network-hotplug"
+
 IMAGE_INSTALL:append = " efi-image-manager"
 
 # Placeholder for resolv.conf
@@ -30,6 +33,9 @@ IMAGE_INSTALL:append = " resolvconf-placeholder"
 # EasyMesh and IEEE1905
 IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh',' unified-wifi-mesh unified-wifi-mesh-cli socat','',d)}"
 IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'with_alsap',' ieee1905-em ','',d)}"
+
+# Webpa
+IMAGE_INSTALL:append = " parodus parodus2ccsp"
 
 require image-exclude-files.inc
 
