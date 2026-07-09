@@ -1,0 +1,13 @@
+[Unit]
+Description=Network Namespace for IEEE1905 agent
+Requires=brlan0.device network-online.target
+After=brlan0.device
+
+[Service]
+Type=oneshot
+ExecStart=/usr/ccsp/ieee1905_create_ns.sh
+SyslogIdentifier=ieee1905_netns
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
