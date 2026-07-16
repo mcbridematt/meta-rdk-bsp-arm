@@ -1,8 +1,8 @@
-From 899bbb790956126a99d8464ccc8cb43397dbd994 Mon Sep 17 00:00:00 2001
+From 29ed1408333fd283785409cf9afe6520daec667b Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Wed, 3 Jul 2024 09:33:01 +1000
-Subject: [PATCH] scripts: lan_handler: create flag files for lan-start and
- ipv4_4-status events
+Subject: [PATCH 07/14] scripts: lan_handler: create flag files for lan-start
+ and ipv4_4-status events
 
 Due to a long standing race condition issue, the ipv4_4-status handler
 is not called. A modified brlan0_check.sh in meta-cmf-traverse will
@@ -10,12 +10,13 @@ try to detect and workaround this issue
 
 Change-Id: I973fcdd05d483034b2b9b349a892dc68de35216c
 
+%% original patch: 0007-scripts-lan_handler-create-flag-files-for-lan-start-.patch
 ---
  source/scripts/init/service.d/lan_handler.sh | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
 diff --git a/source/scripts/init/service.d/lan_handler.sh b/source/scripts/init/service.d/lan_handler.sh
-index 3d5d6fc..4ca0265 100755
+index 20dfe21..f053058 100755
 --- a/source/scripts/init/service.d/lan_handler.sh
 +++ b/source/scripts/init/service.d/lan_handler.sh
 @@ -132,6 +132,17 @@ if [ "$1" = "lan-stop" ] && [ "$2" = "NULL" ] ; then
@@ -36,3 +37,6 @@ index 3d5d6fc..4ca0265 100755
  case "$1" in
     ${SERVICE_NAME}-start)
        service_start
+-- 
+2.52.0
+

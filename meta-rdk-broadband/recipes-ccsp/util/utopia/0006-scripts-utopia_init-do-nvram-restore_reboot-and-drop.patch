@@ -1,13 +1,14 @@
-From d3830a5029216f8ed7b4bafff06164147596acc4 Mon Sep 17 00:00:00 2001
+From a8124647aa07ad57e4900003ed5a50544531f214 Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Mon, 1 Jul 2024 14:35:10 +1000
-Subject: [PATCH] scripts: utopia_init: do nvram restore_reboot and dropbear on
- genericarm
+Subject: [PATCH 06/14] scripts: utopia_init: do nvram restore_reboot and
+ dropbear on genericarm
 
 For the rpi these were implemented as a sed hack in the utopia.bbappend.
 
 Change-Id: Ib7d16fd7595d3b11c1a3f7af64dc571c75b82f99
 
+%% original patch: 0006-scripts-utopia_init-do-nvram-restore_reboot-and-drop.patch
 ---
  source/scripts/init/system/utopia_init.sh | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
@@ -34,3 +35,6 @@ index f7b7f31..0505144 100755
  	echo_t "[utopia][init] started dropbear process"
  	/etc/utopia/service.d/service_sshd.sh sshd-start &
  fi
+-- 
+2.52.0
+
