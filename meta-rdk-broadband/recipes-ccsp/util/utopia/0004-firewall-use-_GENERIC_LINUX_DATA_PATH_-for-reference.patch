@@ -1,7 +1,7 @@
-From d22f06174d061461eee341ce987e8ed4aac24cf8 Mon Sep 17 00:00:00 2001
+From 4abed1015cd1fba640fc01c5cb1d849781bed832 Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Tue, 13 Jan 2026 11:29:07 +1100
-Subject: [PATCH] firewall: use _GENERIC_LINUX_DATA_PATH_ for reference
+Subject: [PATCH 04/14] firewall: use _GENERIC_LINUX_DATA_PATH_ for reference
  platforms
 
 The generic Arm reference platform (meta-rdk-bsp-arm) uses a similar
@@ -20,15 +20,16 @@ migration).
 
 Signed-off-by: Mathew McBride <matt@traverse.com.au>
 
+%% original patch: 0004-firewall-use-_GENERIC_LINUX_DATA_PATH_-for-reference.patch
 ---
  source/firewall/firewall.c | 76 +++++++++++++++++---------------------
  1 file changed, 34 insertions(+), 42 deletions(-)
 
 diff --git a/source/firewall/firewall.c b/source/firewall/firewall.c
-index fbd6dc3..4951661 100644
+index 7172eaa..ad99580 100644
 --- a/source/firewall/firewall.c
 +++ b/source/firewall/firewall.c
-@@ -3170,7 +3170,7 @@ static int prepare_globals_from_configuration(void)
+@@ -3256,7 +3256,7 @@ static int prepare_globals_from_configuration(void)
     fprintf(fp, "-A xlog_accept_wan2lan -j ACCEPT\n");
  
     fprintf(fp, "-A xlog_accept_wan2self -j ACCEPT\n");
@@ -37,7 +38,7 @@ index fbd6dc3..4951661 100644
     fprintf(fp, "-A xlog_drop_wan2lan -j DROP\n");
  #endif
     fprintf(fp, "-A xlog_drop_wan2self -j DROP\n");
-@@ -5442,7 +5442,7 @@ static int do_wan_nat_lan_clients(FILE *fp)
+@@ -5528,7 +5528,7 @@ static int do_wan_nat_lan_clients(FILE *fp)
    }
  #endif
  
@@ -46,7 +47,7 @@ index fbd6dc3..4951661 100644
    if(bEthWANEnable || isBridgeMode) // Check is required for TCHXB6 TCHXB7 CBR and not for HUB4
  #else
    if(bEthWANEnable)
-@@ -6077,7 +6077,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
+@@ -6163,7 +6163,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
     {
        fprintf(fp, "-A SmurfAttack -p icmp -m icmp --icmp-type address-mask-request %s -j ULOG --ulog-prefix \"DoS Attack - Smurf Attack\" --ulog-cprange 50\n", logRateLimit);
     }
@@ -55,7 +56,7 @@ index fbd6dc3..4951661 100644
     fprintf(fp, "-A SmurfAttack -p icmp -m icmp --icmp-type address-mask-request %s -j LOG --log-prefix \"DoS Attack - Smurf Attack\"\n", logRateLimit);
  #elif defined(_COSA_BCM_ARM_) && (defined(_CBR_PRODUCT_REQ_) || defined(_XB6_PRODUCT_REQ_))  
     fprintf(fp, "-A SmurfAttack -p icmp -m icmp --icmp-type address-mask-request %s -j NFLOG --nflog-group 2 --nflog-prefix \"DoS Attack - Smurf Attack\" --nflog-size 50\n", logRateLimit);
-@@ -6097,7 +6097,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
+@@ -6183,7 +6183,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
     {
        fprintf(fp, "-A ICMPSmurfAttack -p icmp -m icmp --icmp-type timestamp-request %s -j ULOG --ulog-prefix \"DoS Attack - Smurf Attack\" --ulog-cprange 50\n", logRateLimit);
     }
@@ -64,7 +65,7 @@ index fbd6dc3..4951661 100644
     fprintf(fp, "-A ICMPSmurfAttack -p icmp -m icmp --icmp-type timestamp-request %s -j LOG --log-prefix \"DoS Attack - Smurf Attack\"\n", logRateLimit);
  #elif defined(_COSA_BCM_ARM_) && (defined(_CBR_PRODUCT_REQ_) || defined(_XB6_PRODUCT_REQ_)) 
     fprintf(fp, "-A ICMPSmurfAttack -p icmp -m icmp --icmp-type timestamp-request %s -j NFLOG --nflog-group 2 --nflog-prefix \"DoS Attack - Smurf Attack\" --nflog-size 50\n", logRateLimit);
-@@ -6119,7 +6119,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
+@@ -6205,7 +6205,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
     {
        fprintf(fp, "-A ICMPFlooding -p icmp %s -j ULOG --ulog-prefix \"DoS Attack - ICMP Flooding\" --ulog-cprange 50\n", logRateLimit);
     }
@@ -73,7 +74,7 @@ index fbd6dc3..4951661 100644
     fprintf(fp, "-A ICMPFlooding -p icmp %s -j LOG --log-prefix \"DoS Attack - ICMP Flooding\"\n", logRateLimit);
  #elif defined(_COSA_BCM_ARM_) && (defined(_CBR_PRODUCT_REQ_) || defined(_XB6_PRODUCT_REQ_)) 
     fprintf(fp, "-A ICMPFlooding -p icmp %s -j NFLOG --nflog-group 2 --nflog-prefix \"DoS Attack - ICMP Flooding\" --nflog-size 50\n", logRateLimit);
-@@ -6141,7 +6141,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
+@@ -6227,7 +6227,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
     {
        fprintf(fp, "-A TCPSYNFlooding -p tcp --syn %s -j ULOG --ulog-prefix \"DoS Attack - TCP SYN Flooding\" --ulog-cprange 50\n", logRateLimit);
     }
@@ -82,7 +83,7 @@ index fbd6dc3..4951661 100644
     fprintf(fp, "-A TCPSYNFlooding -p tcp --syn %s -j LOG --log-prefix \"DoS Attack - TCP SYN Flooding\"\n", logRateLimit);
  #elif defined(_COSA_BCM_ARM_) && (defined(_CBR_PRODUCT_REQ_) || defined(_XB6_PRODUCT_REQ_)) 
     fprintf(fp, "-A TCPSYNFlooding -p tcp --syn %s -j NFLOG --nflog-group 2 --nflog-prefix \"DoS Attack - TCP SYN Flooding\" --nflog-size 50\n", logRateLimit);
-@@ -6165,7 +6165,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
+@@ -6251,7 +6251,7 @@ int do_wan2self_attack(FILE *fp,char* wan_ip)
         {
           fprintf(fp, "-A LANDAttack -s %s %s -j ULOG --ulog-prefix \"DoS Attack - LAND Attack\" --ulog-cprange 50\n", wan_ip, logRateLimit);
         }
@@ -91,7 +92,7 @@ index fbd6dc3..4951661 100644
        fprintf(fp, "-A LANDAttack -s %s %s -j LOG --log-prefix \"DoS Attack - LAND Attack\"\n", wan_ip, logRateLimit);
  #elif defined(_COSA_BCM_ARM_) && (defined(_CBR_PRODUCT_REQ_) || defined(_XB6_PRODUCT_REQ_)) 
        fprintf(fp, "-A LANDAttack -s %s %s -j NFLOG --nflog-group 2 --nflog-prefix \"DoS Attack - LAND Attack\" --nflog-size 50\n", wan_ip, logRateLimit);
-@@ -6526,7 +6526,7 @@ int do_remote_access_control(FILE *nat_fp, FILE *filter_fp, int family)
+@@ -6612,7 +6612,7 @@ int do_remote_access_control(FILE *nat_fp, FILE *filter_fp, int family)
      if (family == AF_INET6)
      {
  #endif
@@ -100,7 +101,7 @@ index fbd6dc3..4951661 100644
  	   remote_access_set_proto(filter_fp, nat_fp, "80", srcaddr, family, ecm_wan_ifname);
         remote_access_set_proto(filter_fp, nat_fp, "443", srcaddr, family, ecm_wan_ifname);
  #endif
-@@ -6798,7 +6798,7 @@ int do_remote_access_control(FILE *nat_fp, FILE *filter_fp, int family)
+@@ -6884,7 +6884,7 @@ int do_remote_access_control(FILE *nat_fp, FILE *filter_fp, int family)
     }
  #endif
  
@@ -109,7 +110,7 @@ index fbd6dc3..4951661 100644
      // RDKB-21814 
      // Drop only remote managment port(8080,8181) in bridge_mode 
      // because port 80, 443 will be used to access MSO page / local admin page.
-@@ -7791,7 +7791,7 @@ InternetAccessPolicyNext3:
+@@ -7877,7 +7877,7 @@ InternetAccessPolicyNext3:
                 snprintf(str, sizeof(str), 
                          "-A %s -p tcp -m tcp --dport 80 -m webstr --host \"%s\" -j %s",
                          rules_table, url + host_name_offset, block_site);
@@ -118,7 +119,7 @@ index fbd6dc3..4951661 100644
                 snprintf(str, sizeof(str), 
                          "-A %s -p tcp -m tcp --dport 80 -d \"%s\" -j %s",
                          rules_table, url + host_name_offset, block_site);
-@@ -9254,7 +9254,7 @@ static int do_parcon_mgmt_site_keywd(FILE *fp, FILE *nat_fp, int iptype, FILE *c
+@@ -9332,7 +9332,7 @@ static int do_parcon_mgmt_site_keywd(FILE *fp, FILE *nat_fp, int iptype, FILE *c
          if (count < 0) count = 0;
          if (count > MAX_SYSCFG_ENTRIES) count = MAX_SYSCFG_ENTRIES;
  
@@ -127,7 +128,7 @@ index fbd6dc3..4951661 100644
          ruleIndex += do_parcon_mgmt_lan2wan_pc_site_appendrule(fp);
  #endif
  
-@@ -9436,7 +9436,7 @@ static int do_parcon_mgmt_site_keywd(FILE *fp, FILE *nat_fp, int iptype, FILE *c
+@@ -9514,7 +9514,7 @@ static int do_parcon_mgmt_site_keywd(FILE *fp, FILE *nat_fp, int iptype, FILE *c
  					//Intel Proposed RDKB Generic Bug Fix from XB6 SDK
  					fprintf(fp, "-A lan2wan_pc_site -p tcp -m tcp --dport 80 -m webstr --host \"%s\" -j LOG_SiteBlocked_%d_DROP\n", query + host_name_offset, idx);
  					fprintf(fp, "-A lan2wan_pc_site -p tcp -m tcp --dport 443 -m webstr --host \"%s\" -j LOG_SiteBlocked_%d_DROP\n", query + host_name_offset, idx);
@@ -136,7 +137,7 @@ index fbd6dc3..4951661 100644
                      fprintf(fp, "-A lan2wan_pc_site -p tcp -m tcp --dport 80 -d \"%s\" -j LOG_SiteBlocked_%d_DROP\n", query + host_name_offset, idx);
                      fprintf(fp, "-A lan2wan_pc_site -p tcp -m tcp --dport 443 -d \"%s\" -j LOG_SiteBlocked_%d_DROP\n", query + host_name_offset, idx);
  #elif !defined(_XER5_PRODUCT_REQ_)
-@@ -10992,7 +10992,7 @@ static int prepare_multinet_postrouting_nat(FILE *nat_fp) {
+@@ -11058,7 +11058,7 @@ static int prepare_multinet_postrouting_nat(FILE *nat_fp) {
  
  static void prepare_ipc_filter(FILE *filter_fp) {
                  FIREWALL_DEBUG("Entering prepare_ipc_filter\n"); 	  
@@ -145,7 +146,7 @@ index fbd6dc3..4951661 100644
      // TODO: fix this hard coding
      fprintf(filter_fp, "-I OUTPUT -o %s -j ACCEPT\n", "l2sd0.500");
      fprintf(filter_fp, "-I INPUT -i %s -j ACCEPT\n", "l2sd0.500");
-@@ -11003,7 +11003,7 @@ static void prepare_ipc_filter(FILE *filter_fp) {
+@@ -11069,7 +11069,7 @@ static void prepare_ipc_filter(FILE *filter_fp) {
  //zqiu<<
  #endif
  
@@ -154,7 +155,7 @@ index fbd6dc3..4951661 100644
  #if defined (_RDKB_GLOBAL_PRODUCT_REQ_)
     if( 0 != strncmp( devicePartnerId, "sky-", 4 ) )
  #endif
-@@ -11214,7 +11214,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
+@@ -11280,7 +11280,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
  #endif /*_HUB4_PRODUCT_REQ_*/
          //fprintf(filter_fp, "-A OUTPUT -o %s -j ACCEPT\n", net_resp);
  
@@ -163,7 +164,7 @@ index fbd6dc3..4951661 100644
  #if defined (_RDKB_GLOBAL_PRODUCT_REQ_)
     if( 0 != strncmp( devicePartnerId, "sky-", 4 ) )
  #endif
-@@ -11305,7 +11305,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
+@@ -11371,7 +11371,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
  
      fprintf(filter_fp, "-A INPUT -i brebhaul -d 169.254.85.0/24 -j ACCEPT\n");
      fprintf(filter_fp, "-A INPUT -i brebhaul -m pkttype ! --pkt-type unicast -j ACCEPT\n");
@@ -172,7 +173,7 @@ index fbd6dc3..4951661 100644
      fprintf(filter_fp, "-A INPUT -i wifi2 -d 169.254.0.0/24 -j ACCEPT\n");
      fprintf(filter_fp, "-A INPUT -i wifi2 -m pkttype ! --pkt-type unicast -j ACCEPT\n");
      fprintf(filter_fp, "-A INPUT -i wifi3 -d 169.254.1.0/24 -j ACCEPT\n");
-@@ -11348,7 +11348,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
+@@ -11414,7 +11414,7 @@ static int prepare_multinet_filter_forward (FILE *filter_fp)
      fprintf(filter_fp, "-A INPUT -i br403 -s 192.168.245.0/24 -p tcp -m tcp --dport 8883 -j ACCEPT\n");
  #endif
  
@@ -181,7 +182,7 @@ index fbd6dc3..4951661 100644
      fprintf(filter_fp, "-A INPUT -i br403 -d 192.168.245.0/24 -j ACCEPT\n");
      fprintf(filter_fp, "-A INPUT -i br403 -m pkttype ! --pkt-type unicast -j ACCEPT\n");
  #endif
-@@ -12152,9 +12152,9 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12222,9 +12222,9 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
  #endif
  
  #if WAN_FAILOVER_SUPPORTED
@@ -193,7 +194,7 @@ index fbd6dc3..4951661 100644
  #endif 
  
  #if defined(_WNXL11BWL_PRODUCT_REQ_) 
-@@ -12327,7 +12327,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12397,7 +12397,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     //Avoid blocking packets at the Intel NIL layer
     fprintf(filter_fp, "-A FORWARD -i a-mux -j ACCEPT\n");
  #endif
@@ -202,7 +203,7 @@ index fbd6dc3..4951661 100644
     fprintf(filter_fp, "-A INPUT -i host0 -s 192.168.147.0/255.255.255.0 -j ACCEPT\n");
     fprintf(filter_fp, "-A OUTPUT -o host0 -d 192.168.147.0/255.255.255.0 -j ACCEPT\n");
  #endif
-@@ -12337,7 +12337,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12407,7 +12407,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     fprintf(filter_fp, "-A OUTPUT -o lo -p tcp -m tcp --sport 49152:49153 -j ACCEPT\n");
     fprintf(filter_fp, "-A OUTPUT ! -o brlan0 -p tcp -m tcp --sport 49152:49153 -j DROP\n");
     /* For EasyMesh Controller Communication */
@@ -211,7 +212,7 @@ index fbd6dc3..4951661 100644
     fprintf(filter_fp, "-I OUTPUT -o %s -p tcp --sport 49153 -j ACCEPT\n",get_current_wan_ifname());
  #endif
     char tr69_enabled[20];
-@@ -12542,7 +12542,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12612,7 +12612,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
  #if !defined(_COSA_INTEL_XB3_ARM_)
     filterPortMap(filter_fp);
  #endif
@@ -220,7 +221,7 @@ index fbd6dc3..4951661 100644
     fprintf(filter_fp, "-A INPUT -s 172.31.255.40/32 -p tcp -m tcp --dport 9000 -j ACCEPT\n");
     fprintf(filter_fp, "-A INPUT -s 172.31.255.40/32 -p udp -m udp --dport 9000 -j ACCEPT\n");
     fprintf(filter_fp, "-A INPUT -p tcp -m tcp --dport 9000 -j DROP\n");
-@@ -12590,7 +12590,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12660,7 +12660,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
         fprintf(filter_fp, "-A INPUT -p tcp -i %s --match multiport --dport 80,443 -j ACCEPT\n",cmdiag_ifname);  
     }
  
@@ -229,7 +230,7 @@ index fbd6dc3..4951661 100644
         #if !defined(_CBR_PRODUCT_REQ_) && !defined (_BWG_PRODUCT_REQ_) && !defined (_CBR2_PRODUCT_REQ_)
             fprintf(filter_fp, "-A FORWARD -i %s -o privbr -p tcp -m multiport --dport 22,23,80,443 -j DROP\n",XHS_IF_NAME);
             fprintf(filter_fp, "-A FORWARD -i %s -o privbr -p tcp -m multiport --dport 22,23,80,443 -j DROP\n",LNF_IF_NAME);
-@@ -12783,7 +12783,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12853,7 +12853,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
  
           fprintf(filter_fp, "-A INPUT -i %s -j ACCEPT\n", ecm_wan_ifname);
        }
@@ -238,7 +239,7 @@ index fbd6dc3..4951661 100644
        if (emta_wan_ifname[0]) // spare eMTA wan interface from Utopia firewall
        {
           fprintf(filter_fp, "-A INPUT -i %s -p udp --dport 80 -j DROP\n", emta_wan_ifname);
-@@ -12799,7 +12799,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12869,7 +12869,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     } else {
         fprintf(filter_fp, "-A SSH_FILTER -j ACCEPT\n");
     } */   
@@ -247,7 +248,7 @@ index fbd6dc3..4951661 100644
     do_ssh_IpAccessTable(filter_fp, "22", AF_INET, ecm_wan_ifname);
  #else
      fprintf(filter_fp, "-A SSH_FILTER -j ACCEPT\n");
-@@ -12866,13 +12866,13 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12936,13 +12936,13 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     prepare_multinet_filter_forward(filter_fp);
     fprintf(filter_fp, "-A FORWARD -j xlog_drop_wan2lan\n");
  
@@ -263,7 +264,7 @@ index fbd6dc3..4951661 100644
  #if defined (_RDKB_GLOBAL_PRODUCT_REQ_)
     if( 0 != strncmp( devicePartnerId, "sky-", 4 ) )
  #endif
-@@ -12891,7 +12891,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12961,7 +12961,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     fprintf(filter_fp, "-I FORWARD -m conntrack --ctdir reply -m connbytes --connbytes 0:15 --connbytes-dir reply --connbytes-mode packets -j GWMETA --dis-pp\n");
  #endif
  
@@ -272,7 +273,7 @@ index fbd6dc3..4951661 100644
     fprintf(filter_fp, "-I FORWARD -d 192.168.100.1/32 -i %s -j DROP\n", lan_ifname);
     fprintf(filter_fp, "-I FORWARD -d 172.31.255.0/24 -j DROP\n");
     fprintf(filter_fp, "-I INPUT -d 172.31.255.0/24 -i %s -j DROP\n", lan_ifname);
-@@ -12931,7 +12931,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -13001,7 +13001,7 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
        //zqiu: R5337
        //do_lan2wan_IoT_Allow(filter_fp);
        do_wan2lan_IoT_Allow(filter_fp);
@@ -281,7 +282,7 @@ index fbd6dc3..4951661 100644
        // Block forwarding between bridges.
        fprintf(filter_fp, "-A FORWARD -i %s -o %s -j DROP\n", lan_ifname, iot_ifName);
        fprintf(filter_fp, "-A FORWARD -i %s -o %s -j DROP\n", XHS_IF_NAME, iot_ifName);
-@@ -13428,7 +13428,7 @@ int do_block_ports(FILE *filter_fp)
+@@ -13498,7 +13498,7 @@ int do_block_ports(FILE *filter_fp)
  
     fprintf(filter_fp, "-A INPUT ! -i brlan0 -p tcp -m tcp --dport 49152:49153 -j DROP\n");
     /* For EasyMesh Controller Communication */
@@ -290,7 +291,7 @@ index fbd6dc3..4951661 100644
     fprintf(filter_fp, "-I INPUT -i %s -p tcp --dport 49153 -j ACCEPT\n", get_current_wan_ifname());
     fprintf(filter_fp, "-I INPUT -i %s -p tcp --dport 8888 -j ACCEPT\n", get_current_wan_ifname());
  #endif
-@@ -13695,7 +13695,7 @@ void  proxy_dns(FILE *nat_fp,int family)
+@@ -13765,7 +13765,7 @@ void  proxy_dns(FILE *nat_fp,int family)
  #endif
  
  #ifdef WAN_FAILOVER_SUPPORTED
@@ -299,7 +300,7 @@ index fbd6dc3..4951661 100644
  void  redirect_dns_to_extender(FILE *nat_fp,int family)
  {
     FIREWALL_DEBUG("Entering redirect_dns_to_extender,current_wan_ifname is %s , default wan is %s\n" COMMA current_wan_ifname COMMA default_wan_ifname);
-@@ -14269,7 +14269,7 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
+@@ -14339,7 +14339,7 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
     filterPortMap(filter_fp);
  #endif
  
@@ -308,7 +309,7 @@ index fbd6dc3..4951661 100644
     do_ssh_IpAccessTable(filter_fp, "22", AF_INET, ecm_wan_ifname);
  #else
     fprintf(filter_fp, "-A SSH_FILTER -j ACCEPT\n");
-@@ -14364,7 +14364,7 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
+@@ -14434,7 +14434,7 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
     {
         fprintf(filter_fp, "-A INPUT -p tcp -i %s --match multiport --dport 80,443 -j ACCEPT\n",cmdiag_ifname);  
     }
@@ -317,7 +318,7 @@ index fbd6dc3..4951661 100644
          #if !defined(_CBR_PRODUCT_REQ_) && !defined (_BWG_PRODUCT_REQ_) && !defined (_CBR2_PRODUCT_REQ_)
             fprintf(filter_fp, "-A FORWARD -i %s -o privbr -p tcp -m multiport --dport 22,23,80,443 -j DROP\n",XHS_IF_NAME);
             fprintf(filter_fp, "-A FORWARD -i %s -o privbr -p tcp -m multiport --dport 22,23,80,443 -j DROP\n",LNF_IF_NAME);
-@@ -15146,15 +15146,7 @@ static int service_start ()
+@@ -15216,15 +15216,7 @@ static int service_start ()
  #endif
     FIREWALL_DEBUG("iptables-restore for ipv6 ends\n");
  
@@ -334,3 +335,6 @@ index fbd6dc3..4951661 100644
         /* Apply Mac Filtering rules */
         v_secure_system("/bin/sh -c /tmp/mac_filter.sh");
     #endif
+-- 
+2.52.0
+
