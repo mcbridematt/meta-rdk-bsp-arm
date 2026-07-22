@@ -16,6 +16,11 @@ EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh', ' --
 CFLAGS += " -Wno-enum-conversion "
 CFLAGS += " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh', ' -Wno-error=maybe-uninitialized -Wno-error=unused-variable -Wno-error=unused-but-set-variable -Wno-error=incompatible-pointer-types -Wno-error=sign-compare -Wno-error -DEASY_MESH_NODE  ', '', d)}"
 
+# Undo RDKB-64429
+CFLAGS:remove = " -DONEWIFI_MULTIAP_APP_SUPPORT"
+EXTRA_OECONF:remove = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
+
+
 do_compile:append() {
     oe_runmake -C source/platform
 }

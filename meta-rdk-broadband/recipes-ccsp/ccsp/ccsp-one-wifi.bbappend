@@ -23,6 +23,12 @@ SRC_URI:append = " \
     file://0002-wifi_db-fix-incorrect-type-for-index-variable.patch \
 "
 
+# Undo RDKB-64429
+SRC_URI:remove = "git://github.com/rdk-gdcs/lan_web.git;protocol=https;branch=main_branch_multiap_update;name=lan_web;destsuffix=lan_web"
+CFLAGS:remove = " -DONEWIFI_MULTIAP_APP_SUPPORT"
+EXTRA_OECONF:remove = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
+SRCREV_FORMAT = "OneWifi"
+
 RDEPENDS_${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh', ' virtual/unified-wifi-mesh-personality', '', d)}"
 RDEPENDS_${PN}:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh', ' openvswitch', '', d)}"
 
@@ -34,6 +40,12 @@ CFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyMesh', ' -DONEWIF
 
 # TODO: Lots of issues in OneWiFi with different int types being compared
 CFLAGS:append:aarch64 = " -Wno-error "
+
+# Undo RDKB-64429
+do_compile:prepend() {
+    mkdir -p ${WORKDIR}/lan_web/
+    touch ${WORKDIR}/lan_web/multiap_stub_removed
+}
 
 do_install:append() {
     install -d ${D}/usr/ccsp/wifi/
