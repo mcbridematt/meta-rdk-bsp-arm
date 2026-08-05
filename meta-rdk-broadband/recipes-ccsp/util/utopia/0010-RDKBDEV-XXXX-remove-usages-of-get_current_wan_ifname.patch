@@ -1,23 +1,20 @@
-From e13e2e9102c1a0a6c33a90b08385f92908da9039 Mon Sep 17 00:00:00 2001
+From f23d4d1ea95d4d23bfbfff6cd33b91968e8d7915 Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Wed, 4 Sep 2024 15:36:18 +1000
-Subject: [PATCH 10/14] RDKBDEV-XXXX: remove usages of get_current_wan_ifname()
+Subject: [PATCH 10/12] RDKBDEV-XXXX: remove usages of get_current_wan_ifname()
 
 get_current_wan_ifname() calls into the platform HAL, which bypasses
 WAN Manager if it is active. Furthermore, get_current_wan_ifname() needs
 to return a static pointer to the interface name (not on the stack),
 which isn't necessarily guaranteed on the current HAL implementations.
 
-Change-Id: I51e4fc756bbec11a548ca2d86aed2fd3f16790c6
 Signed-off-by: Mathew McBride <matt@traverse.com.au>
-
-%% original patch: 0010-RDKBDEV-XXXX-remove-usages-of-get_current_wan_ifname.patch
 ---
  source/firewall/firewall.c | 22 +++++++++++-----------
  1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/source/firewall/firewall.c b/source/firewall/firewall.c
-index ad99580..17ef6c4 100644
+index a21bf44..522624d 100644
 --- a/source/firewall/firewall.c
 +++ b/source/firewall/firewall.c
 @@ -1189,7 +1189,7 @@ int do_mapt_rules_v4(FILE *nat_fp, FILE *filter_fp, FILE *mangle_fp)
@@ -54,7 +51,7 @@ index ad99580..17ef6c4 100644
  #endif //IVI_KERNEL_SUPPORT
      }
  
-@@ -12596,8 +12596,8 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
+@@ -12625,8 +12625,8 @@ static int prepare_subtables(FILE *raw_fp, FILE *mangle_fp, FILE *nat_fp, FILE *
     fprintf(filter_fp, "-A INPUT -p udp -m udp --match multiport --dports 10161,10163 -j SNMP_FILTER\n");
  
     //DROP incoming New NTP packets on erouter interface
@@ -65,7 +62,7 @@ index ad99580..17ef6c4 100644
  
     /* RDKB-57182 Blocking brlan0 ports 80,443 for interfaces other than lan */
     fprintf(filter_fp, "-A INPUT -i brlan0 -p tcp -m multiport --dports 80,443 ! -d %s -j DROP\n", lan_ipaddr);
-@@ -14326,11 +14326,11 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
+@@ -14360,11 +14360,11 @@ static int prepare_disabled_ipv4_firewall(FILE *raw_fp, FILE *mangle_fp, FILE *n
     fprintf(filter_fp, "-A SNMPDROPLOG -j DROP\n");
  
     //DROP incoming  NTP packets on erouter interface
