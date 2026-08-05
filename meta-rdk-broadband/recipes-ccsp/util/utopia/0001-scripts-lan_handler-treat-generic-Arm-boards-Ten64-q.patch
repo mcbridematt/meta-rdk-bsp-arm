@@ -1,10 +1,9 @@
-From 8a55784d420c836e77c8ac20c0cb763019940c12 Mon Sep 17 00:00:00 2001
+From e94bed2678e6ded32931854093e8fc4865c2a248 Mon Sep 17 00:00:00 2001
 From: Mathew McBride <matt@traverse.com.au>
 Date: Mon, 1 Jul 2024 12:29:06 +1000
-Subject: [PATCH 01/14] scripts: lan_handler: treat generic Arm boards (Ten64,
+Subject: [PATCH 01/12] scripts: lan_handler: treat generic Arm boards (Ten64,
  qemu-virt) similar to Raspberry Pi
 
-%% original patch: 0001-scripts-lan_handler-treat-generic-Arm-boards-Ten64-q.patch
 ---
  source/scripts/init/service.d/lan_handler.sh                | 6 ++++--
  source/scripts/init/service.d/service_dhcp_server.sh        | 4 ++--
@@ -13,7 +12,7 @@ Subject: [PATCH 01/14] scripts: lan_handler: treat generic Arm boards (Ten64,
  4 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/source/scripts/init/service.d/lan_handler.sh b/source/scripts/init/service.d/lan_handler.sh
-index e0350d2..8adf540 100755
+index 2db3e39..4b9006b 100755
 --- a/source/scripts/init/service.d/lan_handler.sh
 +++ b/source/scripts/init/service.d/lan_handler.sh
 @@ -54,7 +54,9 @@ SERVICE_NAME="lan_handler"
@@ -27,7 +26,7 @@ index e0350d2..8adf540 100755
  #args: router IP, subnet mask
  ap_addr() {
      if [ "$2" ]; then
-@@ -356,7 +358,7 @@ case "$1" in
+@@ -364,7 +366,7 @@ case "$1" in
  		echo_t "THE INSTANT=$INST"
  		echo_t "THE INSTANT=$INST"
          #(use a simpler test than this -- but Hacky, since it assumes everything we want is not XB3!!)if [ "$BOX_TYPE" = "TCCBR" ] || [ "$BOX_TYPE" = "XB6" -a "$MANUFACTURE" = "Technicolor" ] || [ "$BOX_TYPE" = "XB7" -a "$MANUFACTURE" = "Technicolor" ] ; then
@@ -59,7 +58,7 @@ index 0d82488..60c0dec 100755
          	COUNTER=0
          	while [ $COUNTER -lt 5 ]; do
 diff --git a/source/scripts/init/service.d/service_dhcp_server/dhcp_server_functions.sh b/source/scripts/init/service.d/service_dhcp_server/dhcp_server_functions.sh
-index ff6b486..03643ec 100755
+index 7dec8cb..09457ff 100755
 --- a/source/scripts/init/service.d/service_dhcp_server/dhcp_server_functions.sh
 +++ b/source/scripts/init/service.d/service_dhcp_server/dhcp_server_functions.sh
 @@ -1133,7 +1133,7 @@ fi
@@ -72,7 +71,7 @@ index ff6b486..03643ec 100755
  	   BRIDGE_MODE=`syscfg get bridge_mode`
  	   if [ "$LAN_STATUS" = "stopped" ] && [ $BRIDGE_MODE == 0 ]; then                
 diff --git a/source/scripts/init/service.d/service_ipv4.sh b/source/scripts/init/service.d/service_ipv4.sh
-index ba62cf1..56a499b 100755
+index 91bada3..68ee087 100755
 --- a/source/scripts/init/service.d/service_ipv4.sh
 +++ b/source/scripts/init/service.d/service_ipv4.sh
 @@ -129,7 +129,7 @@ handle_l2_status () {

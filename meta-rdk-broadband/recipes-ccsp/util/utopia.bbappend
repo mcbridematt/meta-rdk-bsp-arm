@@ -1,7 +1,7 @@
 require meta-rdk-broadband/recipes-ccsp/ccsp/ccsp_common_genericarm.inc
 
-SRCREV:utopia = "1addcd243bd493fc3189ede7f9c4fdda1e123ec4"
-PV:pn-utopia = "2.7.0"
+SRCREV:utopia = "c1b0ffa9b4eab392737931b48e9e23368b81d9a9"
+PV:pn-utopia = "2.7.2pre"
 
 DEPENDS:append = " kernel-autoconf utopia-headers libsyswrapper"
 
@@ -10,16 +10,15 @@ SRC_URI:append = " \
     file://0001-scripts-lan_handler-treat-generic-Arm-boards-Ten64-q.patch \
     file://0002-lan_handler-refresh-fix-lan-handler-for-rpi.patch.patch \
     file://0003-bridge-use-service_bridge_rpi-for-generic-arm-platfo.patch \
-    file://0004-firewall-use-_GENERIC_LINUX_DATA_PATH_-for-reference.patch \
-    file://0005-service_wan-use-_GENERIC_LINUX_DATA_PATH_-to-introdu.patch \
+    file://0004-firewall-add-_PLATFORM_GENERICARM_-for-generic-Arm-r.patch \
+    file://0005-service_wan-extend-reference-board-behaviour.patch \
     file://0006-scripts-utopia_init-do-nvram-restore_reboot-and-drop.patch \
     file://0007-scripts-lan_handler-create-flag-files-for-lan-start-.patch \
     file://0008-dhcp-place-dnsmasq.conf-in-RAM-var-volatile.patch \
     file://0009-igd-place-IGD-temporary-files-under-var-volatile.patch \
     file://0010-RDKBDEV-XXXX-remove-usages-of-get_current_wan_ifname.patch \
     file://0011-service-dhcpv6_client-log-to-syslog-instead-of-dev-c.patch \
-    file://0012-firewall-disable-mac-filter.patch \
-    file://0013-scripts-fix-compile-errors-with-DNO_MTA_FEATURE_SUPP.patch \
+    file://0012-scripts-fix-compile-errors-with-DNO_MTA_FEATURE_SUPP.patch \
     file://system_defaults \
 "
 
@@ -27,11 +26,14 @@ LDFLAGS:append = " \
     -lsecure_wrapper \
 "
 
-CFLAGS:append = " -Wno-error=unused-function \
-    -D_GENERIC_LINUX_DATA_PATH_ \
-"
+CFLAGS:append = " -Wno-error=unused-function"
 
 CFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DWAN_FAILOVER_SUPPORTED', '', d)}"
+
+# This package now has generic Arm platform specific handlers, so
+# _PLATFORM_RASPBERRYPI_ (defined in ccsp_common_genericarm.inc as
+# a transition aid) should be removed.
+CFLAGS:remove = " -D_PLATFORM_RASPBERRYPI_"
 
 EXTRA_OECONF:remove = "--with-machine=${MACHINE}"
 
