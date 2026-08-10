@@ -134,7 +134,6 @@ do_install:append() {
     ln -sf /usr/bin/15_dhcp_server ${D}${sysconfdir}/utopia/registration.d/15_dhcp_server
     ln -sf /usr/bin/15_hotspot ${D}${sysconfdir}/utopia/registration.d/15_hotspot
     ln -sf /usr/bin/15_ssh_server ${D}${sysconfdir}/utopia/registration.d/15_ssh_server
-    ln -sf /usr/bin/15_wecb ${D}${sysconfdir}/utopia/registration.d/15_wecb
     ln -sf /usr/bin/20_routing ${D}${sysconfdir}/utopia/registration.d/20_routing
     ln -sf /usr/bin/25_crond ${D}${sysconfdir}/utopia/registration.d/25_crond
     ln -sf /usr/bin/33_cosa ${D}${sysconfdir}/utopia/registration.d/33_cosa
