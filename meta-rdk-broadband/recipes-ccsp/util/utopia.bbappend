@@ -1,5 +1,7 @@
 require meta-rdk-broadband/recipes-ccsp/ccsp/ccsp_common_genericarm.inc
 
+inherit systemd
+
 # See conf/include/srcrev-override.inc
 # Due to the mechanics of bitbake, we cannot override these
 # at the layer level ourselves, they must be overridden in the
@@ -27,6 +29,7 @@ SRC_URI:append = " \
     file://0014-init-wire-up-lan-start-stop-restart-to-lan_handler.patch \
     file://0015-services-create-a-simpler-stub-registration-for-mult.patch \
     file://vlan_util_genericarm.sh \
+    file://utopia.service \
     file://system_defaults \
 "
 
@@ -52,6 +55,10 @@ do_install:append() {
     rm -f ${D}${includedir}/utctx/utctx.h
     rm -f ${D}${includedir}/utctx/utctx_api.h
     rm -f ${D}${includedir}/utctx/utctx_rwlock.h
+
+    # systemd units
+    install -d ${D}/${systemd_unitdir}
+    install -D -m 0644 ${WORKDIR}/utopia.service ${D}${systemd_unitdir}/system/utopia.service
 
     # Config files and scripts
     install -d ${D}/rdklogs
@@ -214,8 +221,10 @@ FILES:${PN} += " \
     /fss/gw/etc/utopia/* \
     /etc/utopia/system_defaults \
     /minidumps/ \
+    /lib/systemd/system/utopia.service \
 "
 
 # 0001-fix-lan-handler-for-rpi.patch contains bash specific syntax which doesn't run with busybox sh
 RDEPENDS:${PN} += "bash"
 
+SYSTEMD_SERVICE:${PN}:append = " utopia.service"
