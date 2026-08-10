@@ -126,6 +126,7 @@ do_install:append() {
     ln -sf /usr/bin/02_bridge ${D}${sysconfdir}/utopia/registration.d/02_bridge
     ln -sf /usr/bin/02_forwarding ${D}${sysconfdir}/utopia/registration.d/02_forwarding
     ln -sf /usr/bin/02_ipv4 ${D}${sysconfdir}/utopia/registration.d/02_ipv4
+    ln -sf /usr/bin/02_ipv6 ${D}${sysconfdir}/utopia/registration.d/02_ipv6
     ln -sf /usr/bin/02_lanHandler ${D}${sysconfdir}/utopia/registration.d/02_lanHandler
     ln -sf /usr/bin/02_multinet ${D}${sysconfdir}/utopia/registration.d/02_multinet
     ln -sf /usr/bin/02_wan ${D}${sysconfdir}/utopia/registration.d/02_wan
