@@ -28,8 +28,10 @@ SRC_URI:append = " \
     file://0013-utopia_init-add-creation-of-brlan0.patch \
     file://0014-init-wire-up-lan-start-stop-restart-to-lan_handler.patch \
     file://0015-services-create-a-simpler-stub-registration-for-mult.patch \
+    file://0016-utopia_init-send-systemd-notification-and-keep-runni.patch \
     file://vlan_util_genericarm.sh \
     file://utopia.service \
+    file://nudge-lan-handler.service \
     file://system_defaults \
 "
 
@@ -59,6 +61,7 @@ do_install:append() {
     # systemd units
     install -d ${D}/${systemd_unitdir}
     install -D -m 0644 ${WORKDIR}/utopia.service ${D}${systemd_unitdir}/system/utopia.service
+    install -D -m 0644 ${WORKDIR}/nudge-lan-handler.service ${D}${systemd_unitdir}/system/nudge-lan-handler.service
 
     # Config files and scripts
     install -d ${D}/rdklogs
@@ -222,9 +225,11 @@ FILES:${PN} += " \
     /etc/utopia/system_defaults \
     /minidumps/ \
     /lib/systemd/system/utopia.service \
+    /lib/systemd/system/nudge-lan-handler.service \
 "
 
 # 0001-fix-lan-handler-for-rpi.patch contains bash specific syntax which doesn't run with busybox sh
 RDEPENDS:${PN} += "bash"
 
 SYSTEMD_SERVICE:${PN}:append = " utopia.service"
+SYSTEMD_SERVICE:${PN}:append = " nudge-lan-handler.service"
