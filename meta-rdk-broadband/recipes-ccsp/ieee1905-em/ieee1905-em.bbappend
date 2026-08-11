@@ -1,5 +1,9 @@
 inherit cargo-update-recipe-crates pkgconfig
 
+PREMIRRORS:prepend:kirkstone = " \
+	https://crates\.io/api/v1/crates/([^/]+)/([^/]+)/download https://static.crates.io/crates/\1/\1-\2.crate \n\
+"
+
 DEPENDS:append = " clang-native rbus"
 
 LDFLAGS:append = " -lrbus"
