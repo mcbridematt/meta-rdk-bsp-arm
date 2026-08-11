@@ -39,6 +39,10 @@ IMAGE_INSTALL:append = " parodus parodus2ccsp"
 
 IMAGE_INSTALL:append = " incus-agent"
 
+# Test only
+
+IMAGE_INSTALL:append = " ieee1905-em"
+
 require image-exclude-files.inc
 
 remove_unused_file() {
