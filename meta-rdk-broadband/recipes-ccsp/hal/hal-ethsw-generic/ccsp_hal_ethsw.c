@@ -109,7 +109,7 @@ int wait_for_wan_manager(void)
     struct stat statbuf;
     int stat_ret = -1;
 
-    while((stat_ret == stat(WAN_MANAGER_INITIALIZED_PATH, &statbuf)) != 0) {
+    while((stat_ret = stat(WAN_MANAGER_INITIALIZED_PATH, &statbuf)) != 0) {
         sleep(1);
     }
 
