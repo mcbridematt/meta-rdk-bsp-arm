@@ -9,7 +9,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/ccsp-one-wifi:"
 # (OneWiFi "main" branch does not recognize --enable-em-app as of 2026-02-12)
 python() {
     distro_features = d.getVar("DISTRO_FEATURES")
-    if (distro_features.find("EasyMesh") > 0):
+    if (distro_features.find("EasyMesh") >= 0):
         src_uri = d.getVar("SRC_URI")
         src_uri = src_uri.replace("git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi","git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=develop;name=OneWifi")
         d.setVar("SRC_URI",src_uri)
