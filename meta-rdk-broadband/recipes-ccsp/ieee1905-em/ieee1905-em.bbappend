@@ -4,6 +4,10 @@ SRCREV = "e5b046be767b492dcfe4d1864954864aee1864d8"
 
 PV = "0.5.0"
 
+PREMIRRORS:prepend:kirkstone = " \
+	https://crates\.io/api/v1/crates/([^/]+)/([^/]+)/download https://static.crates.io/crates/\1/\1-\2.crate \n\
+"
+
 DEPENDS:append = " clang-native rbus"
 
 LDFLAGS:append = " -lrbus"
