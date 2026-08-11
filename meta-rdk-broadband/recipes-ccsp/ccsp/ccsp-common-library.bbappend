@@ -22,11 +22,9 @@ SRC_URI:append = " \
     file://onewifi.service \
 "
 
-# Some systemd unit files invoke through '/bin/sh -c (...)' which causes
-# the true process name not to appear in syslog (e.g journalctl).
-# These patches update the unit files accordingly
-
-SRC_URI:append = " file://0001-service-set-systemd-SyslogIdentifier.patch"
+# 2026-07-20: Incorporate SyslogIdentifier upstreamed change
+# Remove for ccsp-common-library version 2.7.0
+SRCREV_pn-ccsp-common-library = "249f8671ae1008c495b0756ac1a20486ab94e1aa"
 
 # Fix the path of the 'wan_started' monitor so it reads the correct path
 # (it was moved into the /var/run to work under our read-only rootfs)
