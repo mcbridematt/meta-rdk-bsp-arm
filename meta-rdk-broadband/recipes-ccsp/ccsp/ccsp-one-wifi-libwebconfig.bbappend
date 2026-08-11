@@ -2,7 +2,7 @@
 # (OneWiFi "main" branch does not recognize --enable-em-app as of 2026-02-12)
 python() {
     distro_features = d.getVar("DISTRO_FEATURES")
-    if (distro_features.find("EasyMesh") > 0):
+    if (distro_features.find("EasyMesh") >= 0):
         d.setVar("SRC_URI","git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=develop;name=libwebconfig")
         d.setVar("SRCREV_libwebconfig","74ea1f6ca37612b13cfccba6213fe3fb06beb982")
 }
