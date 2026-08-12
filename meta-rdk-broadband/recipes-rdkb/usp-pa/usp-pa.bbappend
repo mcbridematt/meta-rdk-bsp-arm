@@ -14,11 +14,11 @@ do_install:append:class-target () {
                bbfatal "usp-pa.service not found"
        fi
 
-       if ! grep -qE -- '--interface\s+\S+' "${USP_PA_SERVICE}"; then
+       if ! grep -qE -- '--interface[[:space:]]+[^[:space:]]+' "${USP_PA_SERVICE}"; then
                bbfatal "usp-pa.service no longer passes --interface argument"
        fi
 
-       sed -i -E 's|--interface\s+\S+|--interface $OBUSPA_WAN_IF_NAME|' "${USP_PA_SERVICE}"
+       sed -i -E 's|--interface[[:space:]]+[^[:space:]]+|--interface ${USP_PA_WAN_IF_NAME}|' "${USP_PA_SERVICE}"
 
        install -d ${D}${base_libdir}/rdk
        install -m 0755 ${WORKDIR}/usp-pa-resolve-wan-ifname.sh ${D}${base_libdir}/rdk/
