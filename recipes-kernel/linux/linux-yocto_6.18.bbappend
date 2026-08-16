@@ -8,3 +8,5 @@ SRC_URI:append:armefi64 = " \
     file://debug.cfg \
     file://rpi.cfg \
 "
+
+COMPATIBLE_MACHINE:armefi64 = "armefi64"
