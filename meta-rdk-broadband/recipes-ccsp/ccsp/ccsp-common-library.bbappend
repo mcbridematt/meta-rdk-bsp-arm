@@ -80,12 +80,16 @@ do_install:append:class-target () {
     install -D -m 0644 ${S}/systemd_units/snmpSubAgent.service ${D}${systemd_unitdir}/system/snmpSubAgent.service
     install -D -m 0644 ${S}/systemd_units/CcspEthAgent.service ${D}${systemd_unitdir}/system/CcspEthAgent.service
     install -D -m 0644 ${S}/systemd_units/notifyComp.service ${D}${systemd_unitdir}/system/notifyComp.service
+    if ${@bb.utils.contains('DISTRO_FEATURES', 't2', 'true', 'false', d)}; then
     install -D -m 0644 ${S}/systemd_units/CcspTelemetry.service ${D}${systemd_unitdir}/system/CcspTelemetry.service
+    fi
 
     #webpa service
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'webpa', 'true', 'false', d)}; then
     install -D -m 0644 ${S}/systemd_units/webpa.service ${D}${systemd_unitdir}/system/webpa.service
     sed -i "/WorkingDirectory=/a ExecStartPre\=\/bin/sh -c '\/lib/rdk/webpa_pre_setup.sh'\\;" ${D}${systemd_unitdir}/system/webpa.service
     sed -i "s/wan-initialized.target/multi-user.target/g" ${D}${systemd_unitdir}/system/webpa.service
+    fi
     
     #rfc service file
     install -D -m 0644 ${S}/systemd_units/rfc.service ${D}${systemd_unitdir}/system/rfc.service
@@ -118,11 +122,13 @@ do_install:append:class-target () {
     sed -i "/tcp\:192.168.254.253\:705/a  ExecStart=\/usr\/bin\/snmp_subagent \&" ${D}${systemd_unitdir}/system/snmpSubAgent.service
 
     #Telemetry support
+     if ${@bb.utils.contains('DISTRO_FEATURES', 't2', 'true', 'false', d)}; then
      sed -i "/Type=oneshot/a EnvironmentFile=\/etc/\device.properties" ${D}${systemd_unitdir}/system/CcspTelemetry.service
      sed -i "/EnvironmentFile=\/etc\/device.properties/a EnvironmentFile=\/etc\/dcm.properties" ${D}${systemd_unitdir}/system/CcspTelemetry.service
      sed -i "/EnvironmentFile=\/etc\/dcm.properties/a ExecStartPre=\/bin\/sh -c '\/bin\/touch \/rdklogs\/logs\/dcmscript.log'" ${D}${systemd_unitdir}/system/CcspTelemetry.service
      sed -i "s/ExecStart=\/bin\/sh -c '\/lib\/rdk\/dcm.service \&'/ExecStart=\/bin\/sh -c '\/lib\/rdk\/StartDCM.sh \>\> \/rdklogs\/logs\/telemetry.log \&'/g" ${D}${systemd_unitdir}/system/CcspTelemetry.service
      sed -i "s/wan-initialized.target/multi-user.target/g" ${D}${systemd_unitdir}/system/CcspTelemetry.service
+     fi
      install -D -m 0644 ${S}/systemd_units/CcspXdnsSsp.service ${D}${systemd_unitdir}/system/CcspXdnsSsp.service
 
      install -d ${D}${base_libdir}/rdk
@@ -155,6 +161,10 @@ fi' ${D}/usr/ccsp/ccspPAMCPCheck.sh
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'true', 'false', d)}; then
         install -D -m 0644 ${S}/systemd_units/webconfig.service ${D}${systemd_unitdir}/system/webconfig.service
+
+        if ! ${@bb.utils.contains('DISTRO_FEATURES', 'webpa', 'true', 'false', d)}; then
+            sed -i "/^After=webpa.service/d" "${D}${systemd_unitdir}/system/webconfig.service"
+        fi
     fi
     install -D -m 0644 ${S}/systemd_units/wan-initialized.target ${D}${systemd_unitdir}/system/wan-initialized.target
     install -D -m 0644 ${S}/systemd_units/wan-initialized.path ${D}${systemd_unitdir}/system/wan-initialized.path
@@ -189,7 +199,7 @@ SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgr
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'onewifi.service ', 'ccspwifiagent.service', d)}"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'webconfig.service', '', d)}"
 SYSTEMD_SERVICE:${PN}:append = " brlan0_check.service"
-SYSTEMD_SERVICE:${PN}:append = " webpa.service"
+SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webpa', 'webpa.service', '', d)}"
 
 FILES:${PN}:append = " \
     /usr/ccsp/ccspSysConfigEarly.sh \
@@ -213,11 +223,13 @@ FILES:${PN}:append = " \
     ${systemd_unitdir}/system/ProcessResetDetect.path \
     ${systemd_unitdir}/system/ProcessResetDetect.service \
     ${systemd_unitdir}/system/rfc.service \
-    ${systemd_unitdir}/system/CcspTelemetry.service \
     ${systemd_unitdir}/system/CcspXdnsSsp.service \
     ${systemd_unitdir}/system/wan-initialized.target \
     ${systemd_unitdir}/system/wan-initialized.path \
-    ${systemd_unitdir}/system/webpa.service \
 "
 FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ${systemd_unitdir}/system/RdkWanManager.service ${systemd_unitdir}/system/utopia.service ${systemd_unitdir}/system/RdkVlanManager.service  ', '', d)}"
 FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' ${systemd_unitdir}/system/RdkFwUpgradeManager.service ', '', d)}"
+
+# WebPA and Telemetry 2.0
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'webpa', ' ${systemd_unitdir}/system/webpa.service', '', d)}"
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 't2', ' ${systemd_unitdir}/system/CcspTelemetry.service', '', d)}"

@@ -29,7 +29,6 @@ PREFERRED_PROVIDER_virtual/wifi-vendor-mtk ?= "linux-backports"
 VIRTUAL-RUNTIME_mfrlib = "mfrlibs-rpi"
 VIRTUAL-RUNTIME_dtcpmgr = ""
 
-DISTRO_FEATURES:append = " parodus"
 DISTRO_FEATURES:append = " ledmgr"
 DISTRO_FEATURES:append = " build_rne"
 DISTRO_FEATURES:append = " rdk-oss-ssa"
