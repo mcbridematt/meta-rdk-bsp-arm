@@ -12,10 +12,7 @@ CXXFLAGS:append = " \
 
 SRC_URI:append = " \
     file://ccsp_vendor.h \
-    file://utopia.service \
     file://ethwan_intf.sh \
-    file://brlan0_check.sh \
-    file://brlan0_check.service \
     file://onewifi.service \
 "
 
@@ -131,12 +128,10 @@ do_install:append:class-target () {
 
      install -d ${D}${base_libdir}/rdk
      install -m 755 ${WORKDIR}/ethwan_intf.sh ${D}${base_libdir}/rdk/
-     install -m 755 ${WORKDIR}/brlan0_check.sh ${D}${base_libdir}/rdk/
 #WanManager - RdkWanManager.service
      DISTRO_WAN_ENABLED="${@bb.utils.contains('DISTRO_FEATURES','rdkb_wan_manager','true','false',d)}"
      if [ $DISTRO_WAN_ENABLED = 'true' ]; then
      install -D -m 0644 ${S}/systemd_units/RdkWanManager.service ${D}${systemd_unitdir}/system/RdkWanManager.service
-     install -D -m 0644 ${WORKDIR}/utopia.service ${D}${systemd_unitdir}/system/utopia.service
      install -D -m 0644 ${S}/systemd_units/RdkVlanManager.service ${D}${systemd_unitdir}/system/RdkVlanManager.service
      fi
      DISTRO_FW_ENABLED="${@bb.utils.contains('DISTRO_FEATURES','fwupgrade_manager','true','false',d)}"
@@ -144,7 +139,6 @@ do_install:append:class-target () {
          install -D -m 0644 ${S}/systemd_units/RdkFwUpgradeManager.service ${D}${systemd_unitdir}/system/RdkFwUpgradeManager.service
      fi
 
-     install -D -m 0644 ${WORKDIR}/brlan0_check.service ${D}${systemd_unitdir}/system/brlan0_check.service
      ##### erouter0 ip issue
     sed -i '/Factory/a \
 IsErouterRunningStatus=\`ifconfig erouter0 | grep RUNNING | grep -v grep | wc -l\` \
@@ -192,11 +186,10 @@ SYSTEMD_SERVICE:${PN}:append = " rfc.service"
 SYSTEMD_SERVICE:${PN}:append = " notifyComp.service"
 SYSTEMD_SERVICE:${PN}:append = " CcspXdnsSsp.service"
 SYSTEMD_SERVICE:${PN}:append = " wan-initialized.path"
-SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'RdkWanManager.service utopia.service RdkVlanManager.service ', '', d)}"
+SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'RdkWanManager.service RdkVlanManager.service ', '', d)}"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', 'RdkFwUpgradeManager.service ', '', d)}"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'onewifi.service ', 'ccspwifiagent.service', d)}"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'webconfig.service', '', d)}"
-SYSTEMD_SERVICE:${PN}:append = " brlan0_check.service"
 SYSTEMD_SERVICE:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webpa', 'webpa.service', '', d)}"
 
 FILES:${PN}:append = " \
@@ -206,8 +199,6 @@ FILES:${PN}:append = " \
     /usr/ccsp/ccspPAMCPCheck.sh \
     /usr/ccsp/ProcessResetCheck.sh \
     ${base_libdir}/rdk/ethwan_intf.sh \
-    ${base_libdir}/rdk/brlan0_check.sh \
-    ${systemd_unitdir}/system/brlan0_check.service \
     ${systemd_unitdir}/system/CcspCrSsp.service \
     ${systemd_unitdir}/system/CcspPandMSsp.service \
     ${systemd_unitdir}/system/PsmSsp.service \
@@ -225,7 +216,7 @@ FILES:${PN}:append = " \
     ${systemd_unitdir}/system/wan-initialized.target \
     ${systemd_unitdir}/system/wan-initialized.path \
 "
-FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ${systemd_unitdir}/system/RdkWanManager.service ${systemd_unitdir}/system/utopia.service ${systemd_unitdir}/system/RdkVlanManager.service  ', '', d)}"
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ${systemd_unitdir}/system/RdkWanManager.service ${systemd_unitdir}/system/RdkVlanManager.service  ', '', d)}"
 FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' ${systemd_unitdir}/system/RdkFwUpgradeManager.service ', '', d)}"
 
 # WebPA and Telemetry 2.0
