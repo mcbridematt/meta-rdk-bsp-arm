@@ -10,7 +10,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI:append = "file://btrfs-subvolume.service \
                   file://nvram-subvol-init.sh \
                   file://resize-disk.sh \
-                  file://arm_custom_device.properties \
                   "
 
 SRCREV_sysintdevicegenericarm = "${AUTOREV}"
@@ -18,7 +17,6 @@ SRCREV_FORMAT = "sysintgeneric_sysintdevicegenericarm"
 
 RDEPENDS:${PN}:append = " gptfdisk util-linux btrfs-tools multipath-tools"
 do_install:append() {
-    install -m 644 ${WORKDIR}/arm_custom_device.properties ${D}${sysconfdir}/device.properties
     install -d ${D}${systemd_unitdir}/system
     install -m 0755 ${S}/device/lib/rdk/* ${D}${base_libdir}/rdk
     install -m 0755 ${S}/rfc.service ${D}${base_libdir}/rdk
