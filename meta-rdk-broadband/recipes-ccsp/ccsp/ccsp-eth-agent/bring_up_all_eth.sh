@@ -20,6 +20,14 @@
 
 set -e
 
+# ax88179_178a is prevented from being modprobe'd during
+# system startup due to a bug where that driver
+# claims devices that are configured for standard CDC-NCM
+# operation. Bring it up here.
+# If the modprobe fails for whatever reason,
+# let the boot continue (as we are in set -e mode)
+modprobe ax88179_178a || :
+
 # Bring up all Ethernet interfaces before EthAgent starts
 for x in $(find /sys/class/net -name 'eth*'); do
     # Ignore any interface that is not originating from
