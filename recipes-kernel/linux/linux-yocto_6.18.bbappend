@@ -6,4 +6,5 @@ SRC_URI:append:armefi64 = " \
     file://an7581.cfg \
     file://qemu.cfg \
     file://debug.cfg \
+    file://rpi.cfg \
 "
