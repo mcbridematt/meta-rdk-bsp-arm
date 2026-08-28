@@ -19,7 +19,8 @@
 [Unit]
 Description=Utopia service
 
-After=mount-nonvol.service
+After=btrfs-subvolume.service
+Requires=btrfs-subvolume.service
 
 [Service]
 Type=notify
