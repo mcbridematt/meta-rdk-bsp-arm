@@ -30,6 +30,7 @@ SRC_URI:append = " \
     file://0015-services-create-a-simpler-stub-registration-for-mult.patch \
     file://0016-utopia_init-send-systemd-notification-and-keep-runni.patch \
     file://0017-service_ipv6-process-ipv6-prefix-additions-for-brlan.patch \
+    file://0018-service_misc-fix-errors-when-run-with-busybox-sh.patch \
     file://vlan_util_genericarm.sh \
     file://utopia.service \
     file://nudge-lan-handler.service \
