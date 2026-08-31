@@ -177,3 +177,5 @@ SESSIONMGR_WS_RPC_ENABLE = "1"
 #REFPLTB-2784 : easymesh controller arch only supports with wifiagent
 MACHINEOVERRIDES:append = "${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ':onewifi', '' ,d)}"
 DISTRO_FEATURES:remove:onewifi = " easymesh-controller"
+
+DISTRO_FEATURES:remove:broadband = " opengl"
