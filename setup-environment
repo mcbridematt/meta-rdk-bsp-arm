@@ -54,6 +54,14 @@ if [ "${RDK_ENABLE_REFERENCE_IMAGE}" = "y" ]; then
     fi
 fi
 
+# Avoid building virglrender as path of Yocto's
+# qemu-native build
+
+cat <<'EOF' >> conf/local.conf
+PACKAGECONFIG:remove:pn-nativesdk-qemu = "virglrenderer"
+PACKAGECONFIG:remove:pn-qemu-system-native = "virglrenderer"
+EOF
+
 # Setup BitBake multi-build to build both the generic
 # and derived machines (like the RaspberryPi) in the
 # one build structure.
