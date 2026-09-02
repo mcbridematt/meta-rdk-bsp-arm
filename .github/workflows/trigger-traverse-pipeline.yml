@@ -91,7 +91,7 @@ jobs:
           PR_SUBMITTER="${PR_SUBMITTER//\]/_}"
           export MIRROR_REFERENCE="refs/heads/${GITHUB_REPOSITORY_OWNER}/${GITHUB_BASE_REF}/${PR_SUBMITTER}/pull/${{ github.event.number }}"
           echo "Mirror repository reference will be ${MIRROR_REFERENCE}"
-          git push --force gitlabcom "HEAD:${MIRROR_REFERENCE}"
+          git push --no-verify --force gitlabcom "HEAD:${MIRROR_REFERENCE}"
           MIRROR_REPOSITORY_REFERENCE="${MIRROR_REFERENCE#refs/heads/}"
 
           if ! (curl --fail --request POST \
