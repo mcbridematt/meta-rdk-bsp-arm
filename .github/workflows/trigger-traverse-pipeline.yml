@@ -26,12 +26,19 @@ jobs:
           echo 'printf "%s" "$GIT_TOKEN"' >> /tmp/git-askpass.sh
           chmod +x /tmp/git-askpass.sh
 
+      # Checkout note: the code checked out here is not executed by the runner,
+      # it is merely pulled and pushed to the mirror environment.
+      # We need to use the pull_request_target type to use configured
+      # secrets in the repo.
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+          # Required to fetch the fork commit inside pull_request_target
+          allow-unsafe-pr-checkout: true
+          persist-credentials: false
 
       - name: Run GitLab pipeline
         timeout-minutes: 300
