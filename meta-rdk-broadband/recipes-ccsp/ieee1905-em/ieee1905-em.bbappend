@@ -1,4 +1,8 @@
 inherit cargo-update-recipe-crates pkgconfig
+SRC_URI = "git://github.com/rdkcentral/ieee1905-rs.git;branch=develop;protocol=https"
+SRCREV = "86f8c8def23511781cb1d35402a982d9ce261bfc"
+
+PV = "git-20267-09-23"
 
 PREMIRRORS:prepend:kirkstone = " \
 	https://crates\.io/api/v1/crates/([^/]+)/([^/]+)/download https://static.crates.io/crates/\1/\1-\2.crate \n\
@@ -7,6 +11,8 @@ PREMIRRORS:prepend:kirkstone = " \
 DEPENDS:append = " clang-native rbus"
 
 LDFLAGS:append = " -lrbus"
+
+include ieee1905-em-crates.inc
 
 # Override the meta-cmf-broadband recipe to avoid installing
 # systemd files (handled by unified-wifi-mesh-personality-...)
