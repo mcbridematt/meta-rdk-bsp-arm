@@ -6,3 +6,8 @@
 # utopia-headers.bbappend
 GENERIC_ARM_UTOPIA_SRCREV = "adc857addde87240b8adc504b01e5861807d18a4"
 GENERIC_ARM_UTOPIA_PV = "2.8.1"
+
+# 2026-08-26 Some Ethernet agent patches upstreamed
+# https://github.com/rdkcentral/ethernet-agent/pull/64
+GENERIC_ARM_ETH_AGENT_SRCREV = "779663d6bc585952bf78a9df043347c4f91c3975"
+GENERIC_ARM_ETH_AGENT_PV = "2.5.0"
