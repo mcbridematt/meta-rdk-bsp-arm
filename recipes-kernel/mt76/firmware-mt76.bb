@@ -23,16 +23,16 @@ RPROVIDES:${PN} = "virtual/firmware-mtk-wifi6"
 
 do_install () {
     install -d ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7915_eeprom.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7915_eeprom_dbdc.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7915_rom_patch.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7915_wa.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7915_wm.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7915_eeprom.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7915_eeprom_dbdc.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7915_rom_patch.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7915_wa.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7915_wm.bin  ${D}${base_libdir}/firmware/mediatek
 
-    install -m 755 ${S}/firmware/mt7916_eeprom.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7916_rom_patch.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7916_wa.bin  ${D}${base_libdir}/firmware/mediatek
-    install -m 755 ${S}/firmware/mt7916_wm.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7916_eeprom.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7916_rom_patch.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7916_wa.bin  ${D}${base_libdir}/firmware/mediatek
+    install -m 0644 ${S}/firmware/mt7916_wm.bin  ${D}${base_libdir}/firmware/mediatek
     install -m 0644 ${S}/firmware/mt7662.bin  ${D}${base_libdir}/firmware/mediatek
     install -m 0644 ${S}/firmware/mt7662_rom_patch.bin  ${D}${base_libdir}/firmware/mediatek
 
