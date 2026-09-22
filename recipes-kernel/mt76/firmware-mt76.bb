@@ -12,8 +12,6 @@ SRCREV = "f1e1e67d97d1e9a8bb01b59ab20c45ebc985a958"
 S = "${WORKDIR}/git"
 DEPENDS += "virtual/kernel"
 
-inherit module
-
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
