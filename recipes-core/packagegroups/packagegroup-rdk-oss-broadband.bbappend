@@ -2,7 +2,7 @@ RDEPENDS_packagegroup-rdk-oss-broadband:append = " \
     iw \
     wireless-tools \
     ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' ', ' hostapd', d)} \
-    crda \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'kernel-6-18', ' wireless-regdb-static', ' crda', d)} \
     ebtables \
     ethtool \
     ${@bb.utils.contains('DISTRO_FEATURES', 'dac', 'speedtest-cli', '', d)} \
@@ -10,7 +10,4 @@ RDEPENDS_packagegroup-rdk-oss-broadband:append = " \
 
 RDEPENDS_packagegroup-rdk-oss-broadband:remove = " lighttpd"
 
-# kernel 6.18 bringup
-# RDEPENDS_packagegroup-rdk-oss-broadband:append = " virtual/wifi-vendor-mtk"
-# RDEPENDS_packagegroup-rdk-oss-broadband:append = " virtual/firmware-mtk-wifi6"
 RDEPENDS_packagegroup-rdk-oss-broadband:remove:aarch64 = "alljoyn"
