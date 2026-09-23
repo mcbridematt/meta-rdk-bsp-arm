@@ -175,6 +175,10 @@ raspberrypi64-rdk-broadband
   Some components that do not function without `erouter0`, like WebUI,
   are not currently included.
 
+  The WAN interface name is board specific (`eth1` on the generic Arm machine,
+  `eth0` on Raspberry Pi, `eth6`/`eth2` on Ten64) and is configured through
+  `dmsb.wanmanager.if.1.Name` in the matching `ccsp-psm-machine-configs` file.
+
 * USP (`usp-pa`) is the only management agent built into the image by default.
 
   WebPA (parodus) and Telemetry 2.0 are opt-in and configured in `conf/distro/include/local-settings.inc`:

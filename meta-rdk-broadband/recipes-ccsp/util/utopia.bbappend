@@ -32,7 +32,10 @@ SRC_URI:append = " \
     file://0017-service_ipv6-process-ipv6-prefix-additions-for-brlan.patch \
     file://0018-service_misc-fix-errors-when-run-with-busybox-sh.patch \
     file://0019-move-dhcp_options-into-var-volatile.patch \
+    file://0020-waninfo-take-the-WAN-ifname-fallback-from-syscfg.patch \
+    file://0021-firewall_ipv6-do-not-hardcode-erouter0-in-guest-isola.patch \
     file://vlan_util_genericarm.sh \
+    file://resolve-wan-ifname.sh \
     file://utopia.service \
     file://nudge-lan-handler.service \
     file://system_defaults \
@@ -155,9 +158,31 @@ do_install:append() {
     ln -sf /usr/bin/15_dynamic_dns ${D}${sysconfdir}/utopia/registration.d/15_dynamic_dns
     
     install -m 755 ${WORKDIR}/system_defaults ${D}${sysconfdir}/utopia/system_defaults
+
+    # update legacy WAN interface names (syscfg wan_physical_ifname /
+    # ecm_wan_ifname, sysevent wan_ifname) to actually used one.
+    # must run after apply_system_defaults, which re-applies the force-set defaults on every boot.
+    install -d ${D}${base_libdir}/rdk
+    install -m 0755 ${WORKDIR}/resolve-wan-ifname.sh ${D}${base_libdir}/rdk/
+    grep -qx 'apply_system_defaults' ${D}${sysconfdir}/utopia/utopia_init.sh || \
+        bbfatal "utopia_init.sh no longer calls apply_system_defaults"
+    sed -i -e '/^apply_system_defaults$/a /lib/rdk/resolve-wan-ifname.sh' \
+        ${D}${sysconfdir}/utopia/utopia_init.sh
+
     sed -i -e "s/dropbear -E -s -b \/etc\/sshbanner.txt/dropbear -R -E /g" ${D}/etc/utopia/service.d/service_sshd.sh
     sed -i -e "/dropbear -R -E  -a -r/s/$/ -B/" ${D}${sysconfdir}/utopia/service.d/service_sshd.sh
 
+    # fix dropbear "-f authorized_keys_dev" invalid argument.
+    grep -q 'USE_DEVKEYS="-f authorized_keys_dev"' ${D}${sysconfdir}/utopia/service.d/service_sshd.sh || \
+        bbfatal "service_sshd.sh no longer sets USE_DEVKEYS to an OpenSSH style option"
+    sed -i -e 's/USE_DEVKEYS="-f authorized_keys_dev"/USE_DEVKEYS=""/' \
+        ${D}${sysconfdir}/utopia/service.d/service_sshd.sh
+
+    # change hardcoded WAN_INTERFACE="erouter0" to actual runtime value
+    grep -q '^WAN_INTERFACE="erouter0"$' ${D}${sysconfdir}/utopia/service.d/log_env_var.sh || \
+        bbfatal "log_env_var.sh no longer hardcodes WAN_INTERFACE - drop this workaround"
+    sed -i -e 's|^WAN_INTERFACE="erouter0"$|. /etc/waninfo.sh\nWAN_INTERFACE="$(getWanInterfaceName)"|' \
+        ${D}${sysconfdir}/utopia/service.d/log_env_var.sh
 
     #Backup and Restore feature related
     sed -i "/rm -f \/nvram\/syscfg.db.prev/a \ \trm -f \/nvram\/hostapd0.conf.prev \ \n \trm -f \/nvram\/hostapd1.conf.prev" ${D}${sysconfdir}/utopia/utopia_init.sh
@@ -229,6 +254,7 @@ FILES:${PN} += " \
     /minidumps/ \
     /lib/systemd/system/utopia.service \
     /lib/systemd/system/nudge-lan-handler.service \
+    ${base_libdir}/rdk/resolve-wan-ifname.sh \
 "
 
 # 0001-fix-lan-handler-for-rpi.patch contains bash specific syntax which doesn't run with busybox sh

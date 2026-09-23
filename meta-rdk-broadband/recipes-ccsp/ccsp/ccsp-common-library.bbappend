@@ -137,12 +137,6 @@ do_install:append:class-target () {
          install -D -m 0644 ${S}/systemd_units/RdkFwUpgradeManager.service ${D}${systemd_unitdir}/system/RdkFwUpgradeManager.service
      fi
 
-     ##### erouter0 ip issue
-    sed -i '/Factory/a \
-IsErouterRunningStatus=\`ifconfig erouter0 | grep RUNNING | grep -v grep | wc -l\` \
-if [ \"\$IsErouterRunningStatus\" == 0 ]; then \
-ethtool -s erouter0 speed 1000 \
-fi' ${D}/usr/ccsp/ccspPAMCPCheck.sh
 
      DISTRO_OneWiFi_ENABLED="${@bb.utils.contains('DISTRO_FEATURES','OneWifi','true','false',d)}"
      if [ $DISTRO_OneWiFi_ENABLED = 'true' ]; then
