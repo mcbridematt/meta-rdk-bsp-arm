@@ -12,6 +12,8 @@ DEPENDS:append = " clang-native rbus"
 
 LDFLAGS:append = " -lrbus"
 
+CARGO_BUILD_FLAGS:append = ' --features "rbus,topology_ui"'
+
 include ieee1905-em-crates.inc
 
 # Override the meta-cmf-broadband recipe to avoid installing
