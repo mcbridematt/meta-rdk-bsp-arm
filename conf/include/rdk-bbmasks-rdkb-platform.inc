@@ -1,3 +1,5 @@
+# Checked 2026-10-02: this base64 version is only available
+# via teamccp
 BBMASK .= "|meta-rdk/recipes-support/base64"
 
 BBMASK .= "|meta-rdk/recipes-common/rdkversion/"
