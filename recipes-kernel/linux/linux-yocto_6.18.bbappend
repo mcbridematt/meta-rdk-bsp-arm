@@ -21,5 +21,7 @@ SRC_URI:append = " \
     file://0006-wifi-mt76-mt7996-apply-calibration-free-data-from-OT.patch \
     file://0007-mac80211-Allow-IBSS-mode-and-different-beacon-interv.patch \
     file://0008-wifi-mt76-mt7996-bound-the-device-EEPROM-address-bef.patch \
+    file://0009-bitfield-Add-non-constant-field_-prep-get-helpers.patch \
+    file://0010-bitfield-Add-less-checking-__FIELD_-GET-PREP.patch \
 "
 
