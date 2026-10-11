@@ -41,6 +41,9 @@ IMAGE_INSTALL:append = " incus-agent"
 
 IMAGE_INSTALL:append = " packagegroup-firmware-all"
 
+# Requested for demo purposes
+IMAGE_INSTALL:append = " tmux"
+
 require image-exclude-files.inc
 
 remove_unused_file() {
