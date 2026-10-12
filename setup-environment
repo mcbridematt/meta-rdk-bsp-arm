@@ -22,6 +22,8 @@ unset _RDK_FLAVOR
 TOP_DIR=$(pwd)
 export RDK_BSP_LAYER=none
 
+sed -i '/^\(IMAGE_LINGUAS\|ENABLE_BINARY_LOCALE_GENERATION\)/d' meta-rdk/conf/distro/rdk.conf
+
 # 2026-10-02 cherry pick webconfig-framework SRC_URI change ONLY if running in CI
 # This will be removed once the CI pipeline successfully builds and updates the
 # daily manifest
@@ -86,4 +88,5 @@ if [ "${BUILD_ALL_MACHINES}" = "1" ]; then
 	echo -e 'BBMULTICONFIG="generic raspberrypi ten64"' >> "conf/local.conf"
 fi
 
-
+echo -e 'IMAGE_LINGUAS = "en-us"' >> conf/local.conf
+echo -e 'GLIBC_GENERATE_LOCALES = "en_US.UTF-8"' >> conf/local.conf
