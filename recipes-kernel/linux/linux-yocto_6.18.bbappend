@@ -24,3 +24,7 @@ SRC_URI:append = " \
     file://0010-bitfield-Add-less-checking-__FIELD_-GET-PREP.patch \
 "
 
+# AN7581 specific patches
+SRC_URI:append = " \
+    file://0100-airoha-pcie-and-pinctrl-6-18.patch \
+"
