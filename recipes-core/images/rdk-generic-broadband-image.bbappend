@@ -44,6 +44,8 @@ IMAGE_INSTALL:append = " packagegroup-firmware-all"
 # Requested for demo purposes
 IMAGE_INSTALL:append = " tmux"
 
+IMAGE_INSTALL:append = " locale-base-en-us"
+
 require image-exclude-files.inc
 
 remove_unused_file() {
