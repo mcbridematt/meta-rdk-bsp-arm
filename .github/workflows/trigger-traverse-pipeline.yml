@@ -1,7 +1,7 @@
 name: Trigger GitLab pipeline
 
 on:
-  pull_request_target:
+  pull_request:
     types: [opened, synchronize]
 
 concurrency:
@@ -19,43 +19,15 @@ jobs:
         "mcbridematt/meta-rdk-bsp-arm"
       ]'), github.repository)
     steps:
-      # Try to avoid writing the push token onto disk (via .git/config)
-      - name: Create askpass helper script
-        run: |
-          echo '#!/bin/sh' > /tmp/git-askpass.sh
-          echo 'printf "%s" "$GIT_TOKEN"' >> /tmp/git-askpass.sh
-          chmod +x /tmp/git-askpass.sh
-
-      # Checkout note: the code checked out here is not executed by the runner,
-      # it is merely pulled and pushed to the mirror environment.
-      # We need to use the pull_request_target type to use configured
-      # secrets in the repo.
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-          # Required to fetch the fork commit inside pull_request_target
-          allow-unsafe-pr-checkout: true
-          persist-credentials: false
-
       - name: Run GitLab pipeline
         timeout-minutes: 300
         id: pipelinevars
         shell: bash
-        env:
-          GIT_ASKPASS: /tmp/git-askpass.sh
-          GIT_TOKEN: ${{ secrets.GITLAB_PUSH_TOKEN_CREDS }}
         run: |
           cleanup() {
             if [ -n "${NEW_PIPELINE_ID}" ]; then
               echo "Trying to cancel GitLab pipeline ${NEW_PIPELINE_ID}"
-              CANCEL_URL="https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID }}/pipelines/${NEW_PIPELINE_ID}/cancel"
-              echo "Cancellation URL: ${CANCEL_URL}"
-              curl --request POST \
-              --header "PRIVATE-TOKEN: ${GIT_TOKEN}" \
-              "${CANCEL_URL}"
+              echo "FIXME"!
             fi
             exit 130
           }
@@ -64,7 +36,7 @@ jobs:
           # (Last in, first out), so we are iterating in descending order
           # (example: test -> build -> .pre)
           get_test_log() {
-            curl -o pipelinejobs.json -H "PRIVATE-TOKEN: ${GIT_TOKEN}" "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID }}/pipelines/${NEW_PIPELINE_ID}/jobs" 1>/dev/null 2>&1
+            curl -o pipelinejobs.json "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID }}/pipelines/${NEW_PIPELINE_ID}/jobs" 1>/dev/null 2>&1
             NUM_PIPELINE_JOBS=$(cat pipelinejobs.json | jq length)
             for i in $(seq 1 "${NUM_PIPELINE_JOBS}"); do
               array_ref=$((i-1))
@@ -76,7 +48,7 @@ jobs:
                 echo "Job ${job_id} / ${job_name} was cancelled or skipped, not pulling log"
                 continue
               fi
-              curl -o testlog.txt -H "PRIVATE-TOKEN: ${GIT_TOKEN}" "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID}}/jobs/${job_id}/trace" 1>/dev/null 2>&1
+              curl -o testlog.txt "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID}}/jobs/${job_id}/trace" 1>/dev/null 2>&1
               cat testlog.txt
               break
             done
@@ -85,21 +57,20 @@ jobs:
 
           trap 'cleanup' SIGINT
 
-          git remote add gitlabcom https://glpat@gitlab.com/traversetech/rdk/meta-rdk-bsp-arm.git
-          PR_SUBMITTER="${{ github.event.pull_request.user.login }}"
-          PR_SUBMITTER="${PR_SUBMITTER//\[/_}"
-          PR_SUBMITTER="${PR_SUBMITTER//\]/_}"
-          export MIRROR_REFERENCE="refs/heads/${GITHUB_REPOSITORY_OWNER}/${GITHUB_BASE_REF}/${PR_SUBMITTER}/pull/${{ github.event.number }}"
-          echo "Mirror repository reference will be ${MIRROR_REFERENCE}"
-          git push --no-verify --force gitlabcom "HEAD:${MIRROR_REFERENCE}"
-          MIRROR_REPOSITORY_REFERENCE="${MIRROR_REFERENCE#refs/heads/}"
+          pull_data=$(jq -n \
+            --arg organisation "${GITHUB_REPOSITORY_OWNER}"\
+            --arg repository "${{ github.event.pull_request.base.repo.name }}" \
+            --argjson number "${{ github.event.number }}" \
+            --arg sha "${{ github.event.pull_request.head.sha }}" \
+            '{organisation: $organisation, repository: $repository, number: $number, sha: $sha}'
+            )
+          echo "Webhook data: ${pull_data}"
 
           if ! (curl --fail --request POST \
-          -H "PRIVATE-TOKEN: ${GIT_TOKEN}" \
           -H "Content-Type: application/json" \
-          --data "{ \"ref\": \"${MIRROR_REPOSITORY_REFERENCE}\" }" \
+          --data "${pull_data}" \
           -o new_pipeline.json \
-          "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID }}/pipeline"); then
+          "${{ vars.NUDGE_HOOK_URL }}"); then
             echo "ERROR: Failed to trigger GitLab pipeline"
             exit 1
           fi
@@ -120,7 +91,6 @@ jobs:
           while true; do
             if ! (curl --fail --silent --show-error \
               -o pipelinestatus.json \
-              -H "PRIVATE-TOKEN: ${GIT_TOKEN}" \
               "https://${{ vars.GITLAB_SERVER }}/api/v4/projects/${{ vars.GITLAB_PROJECT_ID }}/pipelines/${NEW_PIPELINE_ID}"); then
               echo "ERROR: Failed to query pipeline status"
               exit 1
