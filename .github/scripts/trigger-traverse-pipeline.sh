@@ -1,0 +1,109 @@
+cleanup() {
+	if [ -n "${NEW_PIPELINE_ID}" ]; then
+		echo "Trying to cancel GitLab pipeline ${NEW_PIPELINE_ID}"
+		echo "FIXME"!
+	fi
+	exit 130
+}
+
+# Gets the test log for the first non-cancelled (or skipped) job in the pipeline
+# The last job in the pipeline will be presented first in the list
+# (Last in, first out), so we are iterating in descending order
+# (example: test -> build -> .pre)
+get_test_log() {
+	curl -o pipelinejobs.json "https://${GITLAB_SERVER}/api/v4/projects/${GITLAB_PROJECT_ID}/pipelines/${NEW_PIPELINE_ID}/jobs" 1>/dev/null 2>&1
+	NUM_PIPELINE_JOBS=$(cat pipelinejobs.json | jq length)
+	for i in $(seq 1 "${NUM_PIPELINE_JOBS}"); do
+		array_ref=$((i - 1))
+		job_info=$(cat pipelinejobs.json | jq ".[$array_ref]")
+		job_name=$(echo "${job_info}" | jq -r ".name")
+		job_id=$(echo "${job_info}" | jq -r ".id")
+		job_status=$(echo "${job_info}" | jq -r ".status")
+		if [ "${job_status}" = "canceled" ] || [ "${job_status}" = "skipped" ]; then
+			echo "Job ${job_id} / ${job_name} was cancelled or skipped, not pulling log"
+			continue
+		fi
+		curl -o testlog.txt "https://${GITLAB_SERVER}/api/v4/projects/${GITLAB_PROJECT_ID}/jobs/${job_id}/trace" 1>/dev/null 2>&1
+		cat testlog.txt
+		break
+	done
+	echo "Please go to ${PIPELINE_WEB_URL} to view the full pipeline details"
+}
+
+trap 'cleanup' SIGINT
+
+pull_data=$(
+	jq -n \
+		--arg organisation "${GITHUB_REPOSITORY_OWNER}" \
+		--arg repository "${GITHUB_REPOSITORY_NAME}" \
+		--argjson number "${GITHUB_PR_NUMBER}" \
+		--arg sha "${GITHUB_PR_SHA}" \
+		'{organisation: $organisation, repository: $repository, number: $number, sha: $sha}'
+)
+
+# The "nudge" hook will pull the commit branch from GitHub and
+# push it to GitLab using the credentials it holds
+# (avoiding doing so in the GitHub actions runner, and also
+# the need to use mechanisms such as pull_request_target)
+# It will return the created pipeline data from GitLab verbatim
+# We can use the returned pipeline ID to check the status with
+# GitLab directly.
+if ! (curl --fail --request POST \
+	-H "Content-Type: application/json" \
+	--data "${pull_data}" \
+	-o new_pipeline.json \
+	"${NUDGE_HOOK_URL}"); then
+	echo "ERROR: Failed to trigger GitLab pipeline"
+	exit 1
+fi
+
+if ! NEW_PIPELINE_ID=$(jq -er '.id' new_pipeline.json); then
+	echo "ERROR: GitLab trigger response did not contain a pipeline ID"
+	exit 1
+fi
+export NEW_PIPELINE_ID
+
+echo "Created pipeline ID: ${NEW_PIPELINE_ID}"
+export PIPELINE_WEB_URL=$(cat new_pipeline.json | jq -r ".web_url")
+echo "GitLab CI URL: ${PIPELINE_WEB_URL}"
+
+max_polls=100 # 100 * 120s is just above 3 hours
+polls=0
+EXITCODE=1
+while true; do
+	if ! (curl --fail --silent --show-error \
+		-o pipelinestatus.json \
+		"https://${GITLAB_SERVER}/api/v4/projects/${GITLAB_PROJECT_ID}/pipelines/${NEW_PIPELINE_ID}"); then
+		echo "ERROR: Failed to query pipeline status"
+		exit 1
+	fi
+	CURRENT_PIPELINE_STATUS=$(cat pipelinestatus.json | jq -r .status)
+	if [ "${CURRENT_PIPELINE_STATUS}" = "running" ] || [ "${CURRENT_PIPELINE_STATUS}" = "pending" ] || [ "${CURRENT_PIPELINE_STATUS}" = "created" ] || [ "${CURRENT_PIPELINE_STATUS}" = "waiting_for_resource" ] || [ "${CURRENT_PIPELINE_STATUS}" = "preparing" ] || [ "${CURRENT_PIPELINE_STATUS}" = "scheduled" ]; then
+		echo "Current pipeline status: ${CURRENT_PIPELINE_STATUS}"
+		polls=$((polls + 1))
+		if [ "${polls}" -ge "${max_polls}" ]; then
+			echo "ERROR: Timed out waiting for pipeline to finish"
+			EXITCODE=1
+			break
+		fi
+		sleep 120 &
+		PID=$!
+		# Wait in the background, so if the pipeline is cancelled, the SIGINT handler works
+		wait $PID
+		continue
+	elif [ "${CURRENT_PIPELINE_STATUS}" = "success" ]; then
+		echo "Pipeline successful"
+		EXITCODE=0
+		break
+	elif [ "${CURRENT_PIPELINE_STATUS}" = "failed" ]; then
+		echo "ERROR: Pipeline failed"
+		break
+	else
+		echo "ERROR: Unrecognized status ${CURRENT_PIPELINE_STATUS}"
+		break
+	fi
+done
+set +e
+get_test_log
+set -e
+exit "${EXITCODE}"
